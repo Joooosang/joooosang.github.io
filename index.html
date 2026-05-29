@@ -273,6 +273,7 @@
             height: 100%;
             display: flex;
             align-items: center;
+            justify-content: center; /* 막대 중앙 정렬 */
             position: absolute;
             left: 0;
             top: 0;
@@ -281,11 +282,11 @@
         }
 
         .bar-text {
-            position: absolute;
-            right: -80px; 
+            /* 밀림 현상 방지를 위해 position 제거 */
             font-weight: 700;
             font-size: 0.85rem;
-            color: #111;
+            color: #ffffff; /* 가독성을 위한 흰색 텍스트 */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6); /* 텍스트 그림자 */
             white-space: nowrap;
         }
 
@@ -316,7 +317,6 @@
             .bar-row { flex-direction: column; align-items: flex-start; }
             .bar-label { width: 100%; text-align: left; padding-right: 0; margin-bottom: 5px; }
             .bar-track { width: 100%; margin-bottom: 10px; }
-            .bar-text { right: 10px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
             .findings-grid { flex-direction: column; }
         }
     </style>
