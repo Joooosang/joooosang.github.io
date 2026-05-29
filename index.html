@@ -267,26 +267,28 @@
             border-radius: 0 4px 4px 0;
             height: 30px;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* 전체 막대 기준 중앙 정렬 */
         }
 
         .bar-fill {
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center; /* 막대 중앙 정렬 */
             position: absolute;
             left: 0;
             top: 0;
             border-radius: 0 4px 4px 0;
             animation: slideIn 1.5s ease-out forwards;
+            z-index: 1; /* 텍스트 뒤로 배치 */
         }
 
         .bar-text {
-            /* 밀림 현상 방지를 위해 position 제거 */
+            position: relative;
+            z-index: 2; /* 막대 색상 위로 배치 */
             font-weight: 700;
             font-size: 0.85rem;
-            color: #ffffff; /* 가독성을 위한 흰색 텍스트 */
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.6); /* 텍스트 그림자 */
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* 가독성 극대화를 위해 그림자 강화 */
             white-space: nowrap;
         }
 
@@ -414,43 +416,73 @@
                         <div class="top10-title">Survivor - Top 10 Positive Factors</div>
                         <div class="bar-row">
                             <div class="bar-label">Overall Gameplay Quality</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 64.3%;"><span class="bar-text">64.3% (252)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 64.3%;"></div>
+                                <span class="bar-text">64.3% (252)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Immunity Challenges</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 59.4%;"><span class="bar-text">59.4% (233)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 59.4%;"></div>
+                                <span class="bar-text">59.4% (233)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Tribal Council Dynamics</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 57.4%;"><span class="bar-text">57.4% (225)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 57.4%;"></div>
+                                <span class="bar-text">57.4% (225)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Strategic Gameplay</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 26.5%;"><span class="bar-text">26.5% (104)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 26.5%;"></div>
+                                <span class="bar-text">26.5% (104)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Pure Survival Elements</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 25.3%;"><span class="bar-text">25.3% (99)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 25.3%;"></div>
+                                <span class="bar-text">25.3% (99)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Social Relations & Alliances</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 20.7%;"><span class="bar-text">20.7% (81)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 20.7%;"></div>
+                                <span class="bar-text">20.7% (81)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Alliances & Betrayals</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 17.9%;"><span class="bar-text">17.9% (70)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 17.9%;"></div>
+                                <span class="bar-text">17.9% (70)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Classic & Old School Nostalgia</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 17.6%;"><span class="bar-text">17.6% (69)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 17.6%;"></div>
+                                <span class="bar-text">17.6% (69)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Intense Competition</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 10.7%;"><span class="bar-text">10.7% (42)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 10.7%;"></div>
+                                <span class="bar-text">10.7% (42)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Blindsides</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 10.2%;"><span class="bar-text">10.2% (40)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 10.2%;"></div>
+                                <span class="bar-text">10.2% (40)</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -458,43 +490,73 @@
                         <div class="top10-title">Survivor - Top 10 Negative Factors</div>
                         <div class="bar-row">
                             <div class="bar-label">Excessive Producer Intervention</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 33.6%;"><span class="bar-text">33.6% (139)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 33.6%;"></div>
+                                <span class="bar-text">33.6% (139)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Excessive Rules & Twists</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 29.7%;"><span class="bar-text">29.7% (123)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 29.7%;"></div>
+                                <span class="bar-text">29.7% (123)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Viewer Disappointment</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 18.4%;"><span class="bar-text">18.4% (76)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 18.4%;"></div>
+                                <span class="bar-text">18.4% (76)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Lost Its Core Identity</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 12.3%;"><span class="bar-text">12.3% (51)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 12.3%;"></div>
+                                <span class="bar-text">12.3% (51)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Boring & Slow Pacing</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 12.3%;"><span class="bar-text">12.3% (51)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 12.3%;"></div>
+                                <span class="bar-text">12.3% (51)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Biased Editing & Screentime</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 11.8%;"><span class="bar-text">11.8% (49)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 11.8%;"></div>
+                                <span class="bar-text">11.8% (49)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Predictable Outcomes</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 7.7%;"><span class="bar-text">7.7% (32)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 7.7%;"></div>
+                                <span class="bar-text">7.7% (32)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Artificial & Scripted Production</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 7.5%;"><span class="bar-text">7.5% (31)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 7.5%;"></div>
+                                <span class="bar-text">7.5% (31)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Format Ruined</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 7.0%;"><span class="bar-text">7.0% (29)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 7.0%;"></div>
+                                <span class="bar-text">7.0% (29)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Lack of Fairness</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 2.9%;"><span class="bar-text">2.9% (12)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 2.9%;"></div>
+                                <span class="bar-text">2.9% (12)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -506,43 +568,73 @@
                         <div class="top10-title">Hell's Kitchen - Top 10 Positive Factors</div>
                         <div class="bar-row">
                             <div class="bar-label">Professional Chef Showdowns</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 48.6%;"><span class="bar-text">48.6% (17)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 48.6%;"></div>
+                                <span class="bar-text">48.6% (17)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Dynamic Kitchen Environment</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 48.6%;"><span class="bar-text">48.6% (17)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 48.6%;"></div>
+                                <span class="bar-text">48.6% (17)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Sharp & Constructive Feedback</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 34.3%;"><span class="bar-text">34.3% (12)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 34.3%;"></div>
+                                <span class="bar-text">34.3% (12)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Symbolism of the Black Jacket</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 31.4%;"><span class="bar-text">31.4% (11)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 31.4%;"></div>
+                                <span class="bar-text">31.4% (11)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Outstanding Contestant Skills</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 28.6%;"><span class="bar-text">28.6% (10)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 28.6%;"></div>
+                                <span class="bar-text">28.6% (10)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Gordon Ramsay's Presence</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 22.9%;"><span class="bar-text">22.9% (8)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 22.9%;"></div>
+                                <span class="bar-text">22.9% (8)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Signature Menus & Dishes</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 14.3%;"><span class="bar-text">14.3% (5)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 14.3%;"></div>
+                                <span class="bar-text">14.3% (5)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Contestant Skill Growth</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 14.3%;"><span class="bar-text">14.3% (5)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 14.3%;"></div>
+                                <span class="bar-text">14.3% (5)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Dinner Service Pressure</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 8.6%;"><span class="bar-text">8.6% (3)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 8.6%;"></div>
+                                <span class="bar-text">8.6% (3)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">High Professional Standards</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 2.9%;"><span class="bar-text">2.9% (1)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 2.9%;"></div>
+                                <span class="bar-text">2.9% (1)</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -550,35 +642,59 @@
                         <div class="top10-title">Hell's Kitchen - Top 10 Negative Factors</div>
                         <div class="bar-row">
                             <div class="bar-label">Incompetent & Unskilled Cast</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 41.2%;"><span class="bar-text">41.2% (7)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 41.2%;"></div>
+                                <span class="bar-text">41.2% (7)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Trivial Arguments & Bickering</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 29.4%;"><span class="bar-text">29.4% (5)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 29.4%;"></div>
+                                <span class="bar-text">29.4% (5)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Repeated Culinary Failures</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 29.4%;"><span class="bar-text">29.4% (5)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 29.4%;"></div>
+                                <span class="bar-text">29.4% (5)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Forced Drama & Conflicts</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 17.6%;"><span class="bar-text">17.6% (3)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 17.6%;"></div>
+                                <span class="bar-text">17.6% (3)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Erratic Participant Behavior</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 11.8%;"><span class="bar-text">11.8% (2)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 11.8%;"></div>
+                                <span class="bar-text">11.8% (2)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Excessive Screaming & Fatigue</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 5.9%;"><span class="bar-text">5.9% (1)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 5.9%;"></div>
+                                <span class="bar-text">5.9% (1)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Artificial Reality TV Production</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 5.9%;"><span class="bar-text">5.9% (1)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 5.9%;"></div>
+                                <span class="bar-text">5.9% (1)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Annoying Interpersonal Friction</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 5.9%;"><span class="bar-text">5.9% (1)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 5.9%;"></div>
+                                <span class="bar-text">5.9% (1)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -590,43 +706,73 @@
                         <div class="top10-title">AGT - Top 10 Positive Factors</div>
                         <div class="bar-row">
                             <div class="bar-label">High-Quality Performances</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 95.1%;"><span class="bar-text">95.1% (58)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 95.1%;"></div>
+                                <span class="bar-text">95.1% (58)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Judges' Chemistry</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 50.8%;"><span class="bar-text">50.8% (31)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 50.8%;"></div>
+                                <span class="bar-text">50.8% (31)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Buzzer Judging System</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 41.0%;"><span class="bar-text">41.0% (25)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 41.0%;"></div>
+                                <span class="bar-text">41.0% (25)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Exceptional Skills</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 31.1%;"><span class="bar-text">31.1% (19)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 31.1%;"></div>
+                                <span class="bar-text">31.1% (19)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Entertaining Early Auditions</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 24.6%;"><span class="bar-text">24.6% (15)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 24.6%;"></div>
+                                <span class="bar-text">24.6% (15)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Golden Buzzer Moments</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 18.0%;"><span class="bar-text">18.0% (11)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 18.0%;"></div>
+                                <span class="bar-text">18.0% (11)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Spectacular & Amazing Acts</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 16.4%;"><span class="bar-text">16.4% (10)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 16.4%;"></div>
+                                <span class="bar-text">16.4% (10)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Unique & Creative Talents</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 6.6%;"><span class="bar-text">6.6% (4)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 6.6%;"></div>
+                                <span class="bar-text">6.6% (4)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Fresh & Original Stages</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 3.3%;"><span class="bar-text">3.3% (2)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 3.3%;"></div>
+                                <span class="bar-text">3.3% (2)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Thrilling Performances</div>
-                            <div class="bar-track"><div class="bar-fill pos" style="width: 1.6%;"><span class="bar-text">1.6% (1)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill pos" style="width: 1.6%;"></div>
+                                <span class="bar-text">1.6% (1)</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -634,43 +780,73 @@
                         <div class="top10-title">AGT - Top 10 Negative Factors</div>
                         <div class="bar-row">
                             <div class="bar-label">Frequent Commercial Breaks</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 58.6%;"><span class="bar-text">58.6% (17)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 58.6%;"></div>
+                                <span class="bar-text">58.6% (17)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Excessive Audience Reactions</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 41.4%;"><span class="bar-text">41.4% (12)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 41.4%;"></div>
+                                <span class="bar-text">41.4% (12)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Repetitive Singer Focus</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 37.9%;"><span class="bar-text">37.9% (11)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 37.9%;"></div>
+                                <span class="bar-text">37.9% (11)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Degeneration into Singing Show</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 37.9%;"><span class="bar-text">37.9% (11)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 37.9%;"></div>
+                                <span class="bar-text">37.9% (11)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Forced Melodrama & Tears</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 20.7%;"><span class="bar-text">20.7% (6)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 20.7%;"></div>
+                                <span class="bar-text">20.7% (6)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Backstory-Over-Talent Editing</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 20.7%;"><span class="bar-text">20.7% (6)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 20.7%;"></div>
+                                <span class="bar-text">20.7% (6)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Distracting Camera Work</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 17.2%;"><span class="bar-text">17.2% (5)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 17.2%;"></div>
+                                <span class="bar-text">17.2% (5)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Cliche & Predictable Formats</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 17.2%;"><span class="bar-text">17.2% (5)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 17.2%;"></div>
+                                <span class="bar-text">17.2% (5)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Frustrating Presentation</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 13.8%;"><span class="bar-text">13.8% (4)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 13.8%;"></div>
+                                <span class="bar-text">13.8% (4)</span>
+                            </div>
                         </div>
                         <div class="bar-row">
                             <div class="bar-label">Fabricated Stage Directions</div>
-                            <div class="bar-track"><div class="bar-fill neg" style="width: 3.4%;"><span class="bar-text">3.4% (1)</span></div></div>
+                            <div class="bar-track">
+                                <div class="bar-fill neg" style="width: 3.4%;"></div>
+                                <span class="bar-text">3.4% (1)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
