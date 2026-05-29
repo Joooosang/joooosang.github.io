@@ -7,17 +7,17 @@
     <style>
         :root {
             /* 고려대학교 테마 컬러 (Crimson & Gold) */
-            --primary-color: #820024; /* 고려대 크림슨 레드 */
-            --secondary-color: #b30030; /* 밝은 크림슨 (호버 및 강조용) */
-            --accent-color: #D4AF37; /* 고급스러운 골드 (강조선 등) */
-            --nav-bg: #5a0018; /* 다크 크림슨 (네비게이션 배경) */
+            --primary-color: #820024;
+            --secondary-color: #b30030;
+            --accent-color: #D4AF37;
+            --nav-bg: #5a0018;
             
             /* 그래프 컬러 (파이차트 & 막대그래프 통일) */
-            --pos-bar-color: #4169e1; /* 긍정: 파란색 */
-            --neg-bar-color: #dc143c; /* 부정: 빨간색 */
-            --pie-pos: var(--pos-bar-color); /* 파이차트 긍정 */
-            --pie-neg: var(--neg-bar-color); /* 파이차트 부정 */
-            --pie-neu: #9E9E9E; /* 파이차트 중립 */
+            --pos-bar-color: #4169e1;
+            --neg-bar-color: #dc143c;
+            --pie-pos: var(--pos-bar-color);
+            --pie-neg: var(--neg-bar-color);
+            --pie-neu: #9E9E9E;
 
             /* 기본 배경 및 텍스트 */
             --bg-color: #f4f7f6;
@@ -163,6 +163,28 @@
             border-left: 4px solid var(--primary-color);
         }
 
+        .findings-summary {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent-color);
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border-top: 1px solid #eee;
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .findings-summary h4 {
+            color: var(--primary-color);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .findings-summary h4:first-child {
+            margin-top: 0;
+        }
+
         /* --- Pie Chart CSS --- */
         .pie-charts-wrapper {
             display: flex;
@@ -298,11 +320,6 @@
         @keyframes slideIn { from { width: 0; } }
 
         /* 기타 레이아웃 */
-        .findings-grid { display: flex; gap: 25px; margin: 30px 0; }
-        .finding-card { flex: 1; padding: 25px; border-radius: 10px; background: #fff; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .finding-card.positive { border-top: 5px solid var(--pos-bar-color); }
-        .finding-card.negative { border-top: 5px solid var(--neg-bar-color); }
-
         .proposals-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
         .proposal-item { background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid #eaeaea; transition: transform 0.3s ease; }
         .proposal-item:hover { transform: translateY(-5px); border-color: var(--primary-color); }
@@ -319,7 +336,6 @@
             .bar-row { flex-direction: column; align-items: flex-start; }
             .bar-label { width: 100%; text-align: left; padding-right: 0; margin-bottom: 5px; }
             .bar-track { width: 100%; margin-bottom: 10px; }
-            .findings-grid { flex-direction: column; }
         }
     </style>
 </head>
@@ -355,25 +371,44 @@
             <h2>2. Data Collection</h2>
             <ul>
                 <li><strong>Data Source:</strong> User reviews and ratings from the global review platform IMDb.</li>
-                <li><strong>Selected Programs:</strong> Hell's Kitchen, America's Got Talent, Survivor.</li>
-                <li><strong>Selection Criteria:</strong> Minimum of 100 reviews and at least 50 total episodes (spanning at least 5 seasons).</li>
+                <li><strong>Selected Programs:</strong> Three representative programs across different genres: cooking (Hell's Kitchen), performing arts (America's Got Talent), and action/survival (Survivor).</li>
+                <li><strong>Selection Criteria:</strong> To ensure data reliability, we targeted long-running programs with a minimum of 100 reviews and at least 50 total episodes (spanning at least 5 seasons).</li>
+                <li><strong>Justification:</strong> The selected programs—Survivor, America's Got Talent, and Hell's Kitchen—are highly popular, long-running shows that have accumulated extensive datasets over many years. Analyzing these large-scale datasets allows us to statistically substantiate the elements that viewers consistently favor across genres, such as professionalism and strategy, as well as the elements they reject, such as artificial production.</li>
+                <li><strong>Data Scale:</strong> Hundreds of unstructured review texts were collected and utilized for the analysis.</li>
             </ul>
         </section>
 
         <section id="methods">
             <h2>3. Text Mining Methods</h2>
             <div class="method-step">
-                <h4>Data Preprocessing & Sentiment Analysis</h4>
-                <p>Standardized sentiment labels, filtered missing values, and applied a deep learning-based model using a weighted sum score method.</p>
+                <h4>Data Preprocessing</h4>
+                <p>We standardized the sentiment labels of each dataset into a uniform format and performed data cleaning to remove unnecessary variables, such as seasons and ratings, that did not align with our analytical goals. Additionally, independently collected files in various formats were integrated into a unified analysis environment, and missing values and noise were filtered out to ensure data consistency.</p>
+            </div>
+            <div class="method-step">
+                <h4>Sentiment Analysis</h4>
+                <p>We applied a deep learning-based model to quantify the sentiment within the review texts. Moving beyond simple classification, we implemented a weighted sum score method to transform unstructured text into precise numerical data.</p>
             </div>
             <div class="method-step">
                 <h4>Topic Modeling and Keyword Extraction</h4>
-                <p>Using Codex and BERTopic technologies, we extracted core themes to derive Top 10 charts for each genre.</p>
+                <p>Using Codex and BERTopic technologies, we extracted core themes from the extensive reviews. We mapped the positive and negative factors repeatedly mentioned by viewers in each genre to derive Top 10 charts.</p>
             </div>
         </section>
 
         <section id="findings">
-            <h2>4. Findings (Data Visualization)</h2>
+            <h2>4. Findings</h2>
+            
+            <div class="findings-summary">
+                <h4>Positive Factors:</h4>
+                <ul>
+                    <li><strong>Skill and Realism:</strong> Viewers showed a highly positive response to Hell's Kitchen's 'professional chef competitions (48.6%)' and the 'liveliness of the kitchen (48.6%)'.</li>
+                    <li><strong>Psychological Tension:</strong> Audiences were enthusiastic about Survivor's 'gameplay completion (64.3%)' and 'tribal council psychology (57.4%)'.</li>
+                </ul>
+                <h4>Negative Factors:</h4>
+                <ul>
+                    <li><strong>Incompetence:</strong> Viewers expressed the strongest aversion to Hell's Kitchen's 'unskilled and incompetent participants (41.2%)'.</li>
+                    <li><strong>Artificial Production:</strong> Audiences identified Survivor's 'excessive production intervention (33.6%)' and AGT's 'forced tears and emotional manipulation (20.7%)' as major points of dissatisfaction.</li>
+                </ul>
+            </div>
 
             <div class="pie-charts-wrapper">
                 <div class="pie-box">
