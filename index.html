@@ -1,1 +1,749 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>My Personal Webpage</title> </head> <body> <h1>Hello, World!</h1> <p>Welcome to my new personal site hosted on GitHub.</p> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal for the Survival Strategy Competition Program 'The Professional'</title>
+    <style>
+        :root {
+            /* 고려대학교 테마 컬러 (Crimson & Gold) */
+            --primary-color: #820024; /* 고려대 크림슨 레드 */
+            --secondary-color: #b30030; /* 밝은 크림슨 (호버 및 강조용) */
+            --accent-color: #D4AF37; /* 고급스러운 골드 (강조선 등) */
+            --nav-bg: #5a0018; /* 다크 크림슨 (네비게이션 배경) */
+            
+            /* 그래프 컬러 (파이차트 & 막대그래프 통일) */
+            --pos-bar-color: #4169e1; /* 긍정: 파란색 */
+            --neg-bar-color: #dc143c; /* 부정: 빨간색 */
+            --pie-pos: var(--pos-bar-color); /* 파이차트 긍정 */
+            --pie-neg: var(--neg-bar-color); /* 파이차트 부정 */
+            --pie-neu: #9E9E9E; /* 파이차트 중립 */
+
+            /* 기본 배경 및 텍스트 */
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            padding-top: 60px;
+        }
+
+        nav {
+            background-color: var(--nav-bg);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            font-weight: 500;
+            transition: background 0.3s ease, color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        nav ul li a:hover {
+            background-color: var(--primary-color);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--nav-bg) 0%, var(--primary-color) 100%);
+            color: white;
+            padding: 80px 20px 60px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            max-width: 900px;
+            line-height: 1.3;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .meta-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 25px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .meta-card a {
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 1px dotted #fff;
+        }
+
+        .meta-card a:hover {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background: var(--card-bg);
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            border: 1px solid #eaeaea;
+            scroll-margin-top: 80px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.8rem;
+            display: inline-block;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin-top: 30px;
+            font-size: 1.3rem;
+        }
+
+        h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        p { margin-bottom: 15px; }
+        ul { padding-left: 20px; margin-bottom: 15px; }
+        li { margin-bottom: 10px; }
+
+        .method-step {
+            background: #fff8f8;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #f0e6e6;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        /* --- Pie Chart CSS --- */
+        .pie-charts-wrapper {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 40px 0;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .pie-box {
+            text-align: center;
+            width: 30%;
+            min-width: 250px;
+        }
+
+        .pie-box h4 {
+            font-size: 1.1rem;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        .pie-chart {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 데이터 기반 그라데이션 원형 차트 */
+        .pie-survivor { background: conic-gradient(var(--pie-pos) 0% 44.1%, var(--pie-neg) 44.1% 90.7%, var(--pie-neu) 90.7% 100%); }
+        .pie-agt { background: conic-gradient(var(--pie-pos) 0% 51.7%, var(--pie-neg) 51.7% 76.3%, var(--pie-neu) 76.3% 100%); }
+        .pie-hk { background: conic-gradient(var(--pie-pos) 0% 54.7%, var(--pie-neg) 54.7% 81.3%, var(--pie-neu) 81.3% 100%); }
+
+        .pie-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .color-box { width: 14px; height: 14px; border-radius: 3px; }
+        .color-pos { background-color: var(--pie-pos); }
+        .color-neg { background-color: var(--pie-neg); }
+        .color-neu { background-color: var(--pie-neu); }
+
+        /* --- Bar Chart CSS --- */
+        .program-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px dashed #eaeaea;
+        }
+        
+        .top10-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .top10-column {
+            flex: 1;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .top10-title {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #111;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .bar-label {
+            width: 45%;
+            font-size: 0.85rem;
+            color: #222;
+            padding-right: 15px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .bar-track {
+            width: 55%;
+            background-color: #f0f0f0;
+            border-radius: 0 4px 4px 0;
+            height: 30px;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 0 4px 4px 0;
+            animation: slideIn 1.5s ease-out forwards;
+        }
+
+        .bar-text {
+            position: absolute;
+            right: -80px; 
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #111;
+            white-space: nowrap;
+        }
+
+        .bar-fill.pos { background-color: var(--pos-bar-color); }
+        .bar-fill.neg { background-color: var(--neg-bar-color); }
+
+        @keyframes slideIn { from { width: 0; } }
+
+        /* 기타 레이아웃 */
+        .findings-grid { display: flex; gap: 25px; margin: 30px 0; }
+        .finding-card { flex: 1; padding: 25px; border-radius: 10px; background: #fff; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .finding-card.positive { border-top: 5px solid var(--pos-bar-color); }
+        .finding-card.negative { border-top: 5px solid var(--neg-bar-color); }
+
+        .proposals-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
+        .proposal-item { background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid #eaeaea; transition: transform 0.3s ease; }
+        .proposal-item:hover { transform: translateY(-5px); border-color: var(--primary-color); }
+        
+        .highlight-box { background-color: #fcf6f7; border-left: 5px solid var(--primary-color); padding: 25px; margin: 25px 0; border-radius: 0 8px 8px 0; }
+        .highlight-box h4 { color: var(--primary-color); }
+        
+        .references-list { background: #fafafa; padding: 20px 30px; border-radius: 8px; border: 1px solid #eee; }
+        .references-list ul { list-style-type: square; color: #555; }
+        footer { text-align: center; padding: 40px 20px; background: var(--nav-bg); color: #e0e0e0; font-size: 0.9rem; border-top: 4px solid var(--accent-color); }
+
+        @media (max-width: 900px) {
+            .top10-container { flex-direction: column; }
+            .bar-row { flex-direction: column; align-items: flex-start; }
+            .bar-label { width: 100%; text-align: left; padding-right: 0; margin-bottom: 5px; }
+            .bar-track { width: 100%; margin-bottom: 10px; }
+            .bar-text { right: 10px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+            .findings-grid { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#data">Data Collection</a></li>
+            <li><a href="#methods">Methods</a></li>
+            <li><a href="#findings">Findings & Charts</a></li>
+            <li><a href="#proposals">Content Proposals</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+            <li><a href="#references">References</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>Proposal for the Survival Strategy Competition Program 'The Professional'</h1>
+        <div class="meta-info">
+            <div class="meta-card"><strong>Team Members:</strong> 박주상, 김두현, 강유준, 이윤승</div>
+            <div class="meta-card"><strong>GitHub:</strong> <a href="https://joooosang.github.io" target="_blank">joooosang.github.io</a></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="intro">
+            <h2>1. Introduction</h2>
+            <p>This project was conducted to design the first original content for 'StreamKUS'. Rather than relying on the production team's intuition, we analyzed actual viewer text data to identify 'professionalism' and 'psychological strategy' as the core success factors that drive audience enthusiasm. Based on these insights, we propose a new program format titled 'The Professional'.</p>
+        </section>
+
+        <section id="data">
+            <h2>2. Data Collection</h2>
+            <ul>
+                <li><strong>Data Source:</strong> User reviews and ratings from the global review platform IMDb.</li>
+                <li><strong>Selected Programs:</strong> Hell's Kitchen, America's Got Talent, Survivor.</li>
+                <li><strong>Selection Criteria:</strong> Minimum of 100 reviews and at least 50 total episodes (spanning at least 5 seasons).</li>
+            </ul>
+        </section>
+
+        <section id="methods">
+            <h2>3. Text Mining Methods</h2>
+            <div class="method-step">
+                <h4>Data Preprocessing & Sentiment Analysis</h4>
+                <p>Standardized sentiment labels, filtered missing values, and applied a deep learning-based model using a weighted sum score method.</p>
+            </div>
+            <div class="method-step">
+                <h4>Topic Modeling and Keyword Extraction</h4>
+                <p>Using Codex and BERTopic technologies, we extracted core themes to derive Top 10 charts for each genre.</p>
+            </div>
+        </section>
+
+        <section id="findings">
+            <h2>4. Findings (Data Visualization)</h2>
+
+            <div class="pie-charts-wrapper">
+                <div class="pie-box">
+                    <h4>Survivor Sentiment Ratio</h4>
+                    <div class="pie-chart pie-survivor"></div>
+                    <div class="pie-legend">
+                        <div class="legend-item"><div class="color-box color-pos"></div> 44.1%</div>
+                        <div class="legend-item"><div class="color-box color-neg"></div> 46.6%</div>
+                        <div class="legend-item"><div class="color-box color-neu"></div> 9.2%</div>
+                    </div>
+                </div>
+                <div class="pie-box">
+                    <h4>America's Got Talent Sentiment Ratio</h4>
+                    <div class="pie-chart pie-agt"></div>
+                    <div class="pie-legend">
+                        <div class="legend-item"><div class="color-box color-pos"></div> 51.7%</div>
+                        <div class="legend-item"><div class="color-box color-neg"></div> 24.6%</div>
+                        <div class="legend-item"><div class="color-box color-neu"></div> 23.7%</div>
+                    </div>
+                </div>
+                <div class="pie-box">
+                    <h4>Hell's Kitchen Sentiment Ratio</h4>
+                    <div class="pie-chart pie-hk"></div>
+                    <div class="pie-legend">
+                        <div class="legend-item"><div class="color-box color-pos"></div> 54.7%</div>
+                        <div class="legend-item"><div class="color-box color-neg"></div> 26.6%</div>
+                        <div class="legend-item"><div class="color-box color-neu"></div> 18.8%</div>
+                    </div>
+                </div>
+                <div style="width: 100%; text-align: center; margin-top: 15px;" class="pie-legend">
+                    <div class="legend-item"><div class="color-box color-pos"></div> POSITIVE</div>
+                    <div class="legend-item"><div class="color-box color-neg"></div> NEGATIVE</div>
+                    <div class="legend-item"><div class="color-box color-neu"></div> NEUTRAL</div>
+                </div>
+            </div>
+
+            <div class="program-section">
+                <div class="top10-container">
+                    <div class="top10-column">
+                        <div class="top10-title">Survivor - Top 10 Positive Factors</div>
+                        <div class="bar-row">
+                            <div class="bar-label">Overall Gameplay Quality</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 64.3%;"><span class="bar-text">64.3% (252)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Immunity Challenges</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 59.4%;"><span class="bar-text">59.4% (233)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Tribal Council Dynamics</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 57.4%;"><span class="bar-text">57.4% (225)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Strategic Gameplay</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 26.5%;"><span class="bar-text">26.5% (104)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Pure Survival Elements</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 25.3%;"><span class="bar-text">25.3% (99)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Social Relations & Alliances</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 20.7%;"><span class="bar-text">20.7% (81)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Alliances & Betrayals</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 17.9%;"><span class="bar-text">17.9% (70)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Classic & Old School Nostalgia</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 17.6%;"><span class="bar-text">17.6% (69)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Intense Competition</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 10.7%;"><span class="bar-text">10.7% (42)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Blindsides</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 10.2%;"><span class="bar-text">10.2% (40)</span></div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="top10-column">
+                        <div class="top10-title">Survivor - Top 10 Negative Factors</div>
+                        <div class="bar-row">
+                            <div class="bar-label">Excessive Producer Intervention</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 33.6%;"><span class="bar-text">33.6% (139)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Excessive Rules & Twists</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 29.7%;"><span class="bar-text">29.7% (123)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Viewer Disappointment</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 18.4%;"><span class="bar-text">18.4% (76)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Lost Its Core Identity</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 12.3%;"><span class="bar-text">12.3% (51)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Boring & Slow Pacing</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 12.3%;"><span class="bar-text">12.3% (51)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Biased Editing & Screentime</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 11.8%;"><span class="bar-text">11.8% (49)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Predictable Outcomes</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 7.7%;"><span class="bar-text">7.7% (32)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Artificial & Scripted Production</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 7.5%;"><span class="bar-text">7.5% (31)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Format Ruined</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 7.0%;"><span class="bar-text">7.0% (29)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Lack of Fairness</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 2.9%;"><span class="bar-text">2.9% (12)</span></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="program-section">
+                <div class="top10-container">
+                    <div class="top10-column">
+                        <div class="top10-title">Hell's Kitchen - Top 10 Positive Factors</div>
+                        <div class="bar-row">
+                            <div class="bar-label">Professional Chef Showdowns</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 48.6%;"><span class="bar-text">48.6% (17)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Dynamic Kitchen Environment</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 48.6%;"><span class="bar-text">48.6% (17)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Sharp & Constructive Feedback</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 34.3%;"><span class="bar-text">34.3% (12)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Symbolism of the Black Jacket</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 31.4%;"><span class="bar-text">31.4% (11)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Outstanding Contestant Skills</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 28.6%;"><span class="bar-text">28.6% (10)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Gordon Ramsay's Presence</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 22.9%;"><span class="bar-text">22.9% (8)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Signature Menus & Dishes</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 14.3%;"><span class="bar-text">14.3% (5)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Contestant Skill Growth</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 14.3%;"><span class="bar-text">14.3% (5)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Dinner Service Pressure</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 8.6%;"><span class="bar-text">8.6% (3)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">High Professional Standards</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 2.9%;"><span class="bar-text">2.9% (1)</span></div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="top10-column">
+                        <div class="top10-title">Hell's Kitchen - Top 10 Negative Factors</div>
+                        <div class="bar-row">
+                            <div class="bar-label">Incompetent & Unskilled Cast</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 41.2%;"><span class="bar-text">41.2% (7)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Trivial Arguments & Bickering</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 29.4%;"><span class="bar-text">29.4% (5)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Repeated Culinary Failures</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 29.4%;"><span class="bar-text">29.4% (5)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Forced Drama & Conflicts</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 17.6%;"><span class="bar-text">17.6% (3)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Erratic Participant Behavior</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 11.8%;"><span class="bar-text">11.8% (2)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Excessive Screaming & Fatigue</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 5.9%;"><span class="bar-text">5.9% (1)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Artificial Reality TV Production</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 5.9%;"><span class="bar-text">5.9% (1)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Annoying Interpersonal Friction</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 5.9%;"><span class="bar-text">5.9% (1)</span></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="program-section">
+                <div class="top10-container">
+                    <div class="top10-column">
+                        <div class="top10-title">AGT - Top 10 Positive Factors</div>
+                        <div class="bar-row">
+                            <div class="bar-label">High-Quality Performances</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 95.1%;"><span class="bar-text">95.1% (58)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Judges' Chemistry</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 50.8%;"><span class="bar-text">50.8% (31)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Buzzer Judging System</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 41.0%;"><span class="bar-text">41.0% (25)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Exceptional Skills</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 31.1%;"><span class="bar-text">31.1% (19)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Entertaining Early Auditions</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 24.6%;"><span class="bar-text">24.6% (15)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Golden Buzzer Moments</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 18.0%;"><span class="bar-text">18.0% (11)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Spectacular & Amazing Acts</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 16.4%;"><span class="bar-text">16.4% (10)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Unique & Creative Talents</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 6.6%;"><span class="bar-text">6.6% (4)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Fresh & Original Stages</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 3.3%;"><span class="bar-text">3.3% (2)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Thrilling Performances</div>
+                            <div class="bar-track"><div class="bar-fill pos" style="width: 1.6%;"><span class="bar-text">1.6% (1)</span></div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="top10-column">
+                        <div class="top10-title">AGT - Top 10 Negative Factors</div>
+                        <div class="bar-row">
+                            <div class="bar-label">Frequent Commercial Breaks</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 58.6%;"><span class="bar-text">58.6% (17)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Excessive Audience Reactions</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 41.4%;"><span class="bar-text">41.4% (12)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Repetitive Singer Focus</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 37.9%;"><span class="bar-text">37.9% (11)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Degeneration into Singing Show</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 37.9%;"><span class="bar-text">37.9% (11)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Forced Melodrama & Tears</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 20.7%;"><span class="bar-text">20.7% (6)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Backstory-Over-Talent Editing</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 20.7%;"><span class="bar-text">20.7% (6)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Distracting Camera Work</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 17.2%;"><span class="bar-text">17.2% (5)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Cliche & Predictable Formats</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 17.2%;"><span class="bar-text">17.2% (5)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Frustrating Presentation</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 13.8%;"><span class="bar-text">13.8% (4)</span></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Fabricated Stage Directions</div>
+                            <div class="bar-track"><div class="bar-fill neg" style="width: 3.4%;"><span class="bar-text">3.4% (1)</span></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="proposals">
+            <h2>5. Content Proposals</h2>
+            <div class="proposals-container">
+                <div class="proposal-item">
+                    <h4>Participant Composition (Elimination of Incompetence)</h4>
+                    <p>Based on data evidence (41.2% negative for Hell's Kitchen), the cast will consist entirely of seasoned professionals with over 10 years of experience in their respective fields. We aim for high satisfaction (95.1%), similar to AGT's top stages, through "flawless performances by the best."</p>
+                </div>
+                <div class="proposal-item">
+                    <h4>Autonomous System (Blocking Production Intervention)</h4>
+                    <p>Reflecting the Survivor data (33.6% negative), the authority to eliminate participants will be delegated entirely to the contestants themselves. This induces a pure strategic battle free from artificial intervention.</p>
+                </div>
+                <div class="proposal-item">
+                    <h4>Subdued Production (Focusing on the Essence)</h4>
+                    <p>Incorporating feedback on AGT's 'excessive reactions (41.4%)', we will eliminate melodramatic editing and maximize a documentary-style realism that focuses on the craftsmen's technical skills.</p>
+                </div>
+                <div class="proposal-item">
+                    <h4>Symbolism (Providing Catharsis)</h4>
+                    <p>Mirroring Hell's Kitchen's success factor, the 'black jacket (31.4% positive)', we will award specially crafted uniforms and tools to survivors to visualize professional authority.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>6. Conclusion</h2>
+            <div class="highlight-box">
+                <h4>Summary of Core Findings and Proposals</h4>
+                <p>This project numerically demonstrated the success formulas and failure factors of survival programs by analyzing IMDb text review data. The analysis revealed that viewers responded highly positively to the overwhelming professionalism and sophisticated strategies of the participants, while showing strong aversion to participant incompetence and artificial production interventions. Based on these findings, we propose a new content model, 'The Professional', which combines the recruitment of seasoned experts with an autonomous council system to reflect the core needs of the audience.</p>
+            </div>
+            
+            <h4>Limitations of the Analysis</h4>
+            <p>There were practical limitations during the research process. First, due to a lack of reviews for specific episodes, we had to adopt an integrated program-level analysis rather than the initially planned episode-specific detailed analysis. Second, utilizing data solely from the single platform IMDb introduces the possibility that the results are skewed toward the tendencies of a specific user base.</p>
+
+            <h4>Future Directions</h4>
+            <p>It is necessary to collect additional data from YouTube trending features and social media platforms to dynamically reflect real-time public reactions. Furthermore, a comparative analysis with popular domestic programs like 'Culinary Class Wars' could help derive localized strategies tailored to different cultural contexts. Ultimately, introducing episode-level time-series sentiment analysis to track text characteristics at specific viewership fluctuation points will provide more concrete, data-driven production guidelines.</p>
+        </section>
+
+        <section id="references">
+            <h2>7. References</h2>
+            <div class="references-list">
+                <h3>Data Sources</h3>
+                <ul>
+                    <li>IMDb. (n.d.). Survivor [TV Series Reviews].</li>
+                    <li>IMDb. (n.d.). America's Got Talent [TV Series Reviews].</li>
+                    <li>IMDb. (n.d.). Hell's Kitchen [TV Series Reviews].</li>
+                </ul>
+                <h3>Analytical Tools & Software</h3>
+                <ul>
+                    <li>Google. (2024). Gemini Plus [Large language model for data verification and scenario generation].</li>
+                    <li>Google. (2024). NotebookLM [AI-powered research and writing assistant for project synthesis].</li>
+                    <li>Google. (2024). Google Colab [Cloud-based Python development environment].</li>
+                    <li>OpenAI. (2024). ChatGPT Plus (Codex) [Large language model for code generation and data extraction].</li>
+                </ul>
+                <h3>Platforms & Collaboration Tools</h3>
+                <ul>
+                    <li>GitHub. (n.d.). Pysun Project Repository [Online repository].</li>
+                    <li>Slack Technologies. (2026). Slack [Collaboration software].</li>
+                    <li>Padlet. (2026). Pysun IFLA Chart [Online bulletin board].</li>
+                </ul>
+            </div>
+        </section>
+        
+    </div>
+
+    <footer>
+        <p>&copy; 2026 'The Professional' Project Team. Created for StreamKUS Content Planning.</p>
+    </footer>
+
+</body>
+</html>
