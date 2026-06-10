@@ -557,7 +557,9 @@ import time
 from urllib.error import HTTPError
 from urllib.request import Request
 from urllib.request import urlopen
+
 import pandas as pd
+
 
 SERIES_ID = "tt0239195"
 GRAPHQL_URL = "https://caching.graphql.imdb.com/"
@@ -573,23 +575,306 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
 }
 
+
 def graphql(query, variables=None, max_retries=4):
     payload = {"query": query, "variables": variables or {}}
     body = json.dumps(payload).encode("utf-8")
 
-# ... [Middle part of the code has been truncated for display purposes] ...
-# Handles GraphQL nested json responses, pagination loops, and dynamic extraction of user review nodes
+    for attempt in range(max_retries):
+        request = Request(GRAPHQL_URL, data=body, headers=HEADERS, method="POST")
+        try:
+            with urlopen(request, timeout=60) as response:
+                data = json.loads(response.read().decode("utf-8"))
+            if data.get("errors"):
+                raise RuntimeError(data["errors"])
+            return data["data"]
+        except HTTPError as error:
+            detail = error.read().decode("utf-8", errors="replace")
+            if attempt == max_retries - 1:
+                raise RuntimeError(f"HTTP {error.code}: {detail[:500]}") from error
+        except Exception:
+            if attempt == max_retries - 1:
+                raise
+        time.sleep(2**attempt)
+
+
+def get_seasons(series_id):
+    query = """
+    query Seasons($id: ID!) {
+      title(id: $id) {
+        episodes {
+          displayableSeasons(first: 100) {
+            edges {
+              node {
+                season
+                text
+              }
+            }
+          }
+        }
+      }
+    }
+    """
+    data = graphql(query, {"id": series_id})
+    edges = data["title"]["episodes"]["displayableSeasons"]["edges"]
+    seasons = [edge["node"]["season"] for edge in edges]
+    return sorted(seasons, key=lambda value: int(value) if value.isdigit() else 10**9)
+
+
+def get_episodes_for_season(series_id, season):
+    query = """
+    query Episodes($id: ID!, $season: String!, $after: ID) {
+      title(id: $id) {
+        episodes {
+          episodes(first: 25, after: $after, filter: {includeSeasons: [$season]}) {
+            total
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            edges {
+              node {
+                id
+                titleText {
+                  text
+                }
+                series {
+                  displayableEpisodeNumber {
+                    displayableSeason {
+                      season
+                      text
+                    }
+                    episodeNumber {
+                      episodeNumber
+                      text
+                    }
+                  }
+                }
+                ratingsSummary {
+                  aggregateRating
+                  voteCount
+                }
+                reviews(first: 1) {
+                  total
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    """
+    episodes = []
+    after = None
+    while True:
+        data = graphql(query, {"id": series_id, "season": season, "after": after})
+        conn = data["title"]["episodes"]["episodes"]
+        for edge in conn["edges"]:
+            node = edge["node"]
+            display_no = node["series"]["displayableEpisodeNumber"]
+            episodes.append(
+                {
+                    "episode_id": node["id"],
+                    "season": display_no["displayableSeason"]["season"],
+                    "episode": display_no["episodeNumber"]["episodeNumber"],
+                    "episode_title": node["titleText"]["text"],
+                    "episode_imdb_rating": node.get("ratingsSummary", {}).get("aggregateRating"),
+                    "episode_vote_count": node.get("ratingsSummary", {}).get("voteCount"),
+                    "episode_review_count": node.get("reviews", {}).get("total", 0),
+                }
+            )
+
+        page_info = conn["pageInfo"]
+        if not page_info["hasNextPage"]:
+            break
+        after = page_info["endCursor"]
+        time.sleep(0.2)
+
+    return episodes
+
+
+def get_episode_reviews(episode_id):
+    query = """
+    query Reviews($id: ID!, $after: ID) {
+          title(id: $id) {
+        reviews(first: 25, after: $after, sort: {by: SUBMISSION_DATE, order: DESC}) {
+          total
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          edges {
+            node {
+              id
+              authorRating
+              spoiler
+              submissionDate
+              summary {
+                originalText
+              }
+              text {
+                originalText {
+                  plainText
+                }
+              }
+              helpfulness {
+                upVotes
+                downVotes
+                score
+              }
+            }
+          }
+        }
+      }
+    }
+    """
+    reviews = []
+    after = None
+    while True:
+        try:
+            data = graphql(query, {"id": episode_id, "after": after})
+        except RuntimeError as error:
+            if "BAD_USER_INPUT" in str(error):
+                return reviews
+            raise
+        conn = data["title"]["reviews"]
+        for edge in conn["edges"]:
+            review = edge["node"]
+            text = ((review.get("text") or {}).get("originalText") or {}).get("plainText")
+            reviews.append(
+                {
+                    "review_id": review.get("id"),
+                    "review_date": review.get("submissionDate"),
+                    "user_rating": review.get("authorRating"),
+                    "spoiler": review.get("spoiler"),
+                    "review_title": (review.get("summary") or {}).get("originalText"),
+                    "review_text": text,
+                    "helpful_up_votes": (review.get("helpfulness") or {}).get("upVotes"),
+                    "helpful_down_votes": (review.get("helpfulness") or {}).get("downVotes"),
+                    "helpfulness_score": (review.get("helpfulness") or {}).get("score"),
+                }
+            )
+
+        page_info = conn["pageInfo"]
+        if not page_info["hasNextPage"]:
+            break
+        after = page_info["endCursor"]
+        time.sleep(0.2)
+    return reviews
+
+
+def score_text_sentiment(text):
+    text = (text or "").lower()
+    positive_words = {
+        "great",
+        "good",
+        "excellent",
+        "amazing",
+        "best",
+        "love",
+        "loved",
+        "enjoy",
+        "enjoyed",
+        "fun",
+        "interesting",
+        "perfect",
+        "strong",
+        "iconic",
+        "legendary",
+        "fantastic",
+        "solid",
+    }
+    negative_words = {
+        "bad",
+        "boring",
+        "worst",
+        "awful",
+        "terrible",
+        "poor",
+        "hate",
+        "hated",
+        "disappointing",
+        "weak",
+        "slow",
+        "dull",
+        "predictable",
+        "annoying",
+        "mess",
+        "waste",
+    }
+    words = re.findall(r"[a-z']+", text)
+    score = sum(word in positive_words for word in words) - sum(word in negative_words for word in words)
+    if score > 0:
+        return "positive"
+    if score < 0:
+        return "negative"
+    return "neutral"
+
+
+def classify_sentiment(rating, text):
+    if pd.notna(rating):
+        rating = int(rating)
+        if rating >= 7:
+            return "positive"
+        if rating <= 4:
+            return "negative"
+        return "neutral"
+    return score_text_sentiment(text)
+
+
+def main(series_id=SERIES_ID, output_excel=OUTPUT_EXCEL):
+    seasons = get_seasons(series_id)
+    print(f"시즌 {len(seasons)}개 확인: {', '.join(seasons[:10])} ... {seasons[-1]}", flush=True)
+
+    episodes = []
+    for season in seasons:
+        season_episodes = get_episodes_for_season(series_id, season)
+        episodes.extend(season_episodes)
+        print(f"시즌 {season}: 회차 {len(season_episodes)}개", flush=True)
+        time.sleep(0.2)
+
+    rows = []
+    total_episodes = len(episodes)
+    for index, episode in enumerate(episodes, start=1):
+        if not episode.get("episode_review_count"):
+            print(
+                f"{index}/{total_episodes} "
+                f"S{episode['season']}E{episode['episode']} {episode['episode_id']}: 리뷰 0개",
+                flush=True,
+            )
+            continue
+
+        reviews = get_episode_reviews(episode["episode_id"])
+        for review in reviews:
+            row = {**episode, **review}
+            row["sentiment"] = classify_sentiment(row.get("user_rating"), row.get("review_text"))
+            rows.append(row)
+        print(
+            f"{index}/{total_episodes} "
+            f"S{episode['season']}E{episode['episode']} {episode['episode_id']}: 리뷰 {len(reviews)}개"
+            ,
+            flush=True,
+        )
+        time.sleep(0.25)
 
     columns = [
         "season",
         "episode",
         "episode_id",
+        "episode_title",
+        "episode_imdb_rating",
+        "episode_vote_count",
+        "episode_review_count",
+        "review_id",
         "review_date",
         "user_rating",
         "sentiment",
+        "spoiler",
+        "review_title",
         "review_text",
         "helpful_up_votes",
         "helpful_down_votes",
+        "helpfulness_score",
     ]
     df = pd.DataFrame(rows, columns=columns)
     if not df.empty:
@@ -600,14 +885,17 @@ def graphql(query, variables=None, max_retries=4):
 
     df.to_excel(output_excel, index=False)
     print(df.shape)
+    print(df.head(10).to_string(index=False))
     print(f"저장 완료: {output_excel}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--series-id", default=SERIES_ID)
     parser.add_argument("--output", default=OUTPUT_EXCEL)
     args = parser.parse_args()
-    main(series_id=args.series_id, output_excel=args.output)</code></pre>
+    main(series_id=args.series_id, output_excel=args.output)
+</code></pre>
                 </div>
             </div>
 
@@ -623,20 +911,236 @@ import matplotlib.pyplot as plt
 # Install openpyxl for reading Excel files
 !pip install openpyxl
 
-# 1. Google Drive Mount
+# 1. 구글 드라이브 마운트
 from google.colab import drive
 drive.mount('/content/drive')
 
-# Data loading function handling both Excel and CSV formats
+# 2. 파일 경로 설정 (지정하신 경로 적용)
+survivor_path = "/content/drive/MyDrive/EnText/Survivor_reviews.xlsx"
+agt_path = "/content/drive/MyDrive/EnText/America's Got Talent_reviews.xlsx"
+hk_path = "/content/drive/MyDrive/EnText/hells kitchen_reviews.xlsx"
+
+# 파일 로드 함수 (포맷에 맞게 read_excel 또는 read_csv 처리)
+def load_data(file_path):
+    if not os.path.exists(file_path):
+        # 만약 확장자가 .xlsx이지만 실제 내부는 csv 형태로 저장된 경우를 대비한 예외 처리
+        csv_path = file_path.replace('.xlsx', '_reviews.xlsx - Sheet1.csv')
+        if os.path.exists(csv_path):
+            return pd.read_csv(csv_path)
+        else:
+            # 파일명 형태가 다를 경우 유연하게 매칭
+            dir_name = os.path.dirname(file_path)
+            base_name = os.path.basename(file_path).split('_')[0]
+            for f in os.listdir(dir_name):
+                if base_name in f and f.endswith('.csv'):
+                    return pd.read_csv(os.path.join(dir_name, f))
+            raise FileNotFoundError(f"파일을 찾을 수 없습니다: {file_path}")
+    return pd.read_excel(file_path)
+
+# 데이터 불러오기
+df_survivor = load_data(survivor_path)
+df_agt = load_data(agt_path)
+df_hk = load_data(hk_path)
+
+print("데이터 로드 완료!")
+# ==========================================
+fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+dfs = [df_survivor, df_agt, df_hk]
+titles = ['Survivor', "America's Got Talent", "Hell's Kitchen"]
+colors = ['#4CAF50', '#F44336', '#9E9E9E'] # 긍정(초록), 부정(빨강), 중립(회색) 기준 설정
+
+for i, df in enumerate(dfs):
+    # 데이터셋의 구조에 맞춰 감성 라벨 표준화
+    df['sentiment_clean'] = df['sentiment'].astype(str).str.lower().replace({
+        '1': 'positive', '-1': 'negative', '0': 'neutral'
+    })
+
+    sentiment_counts = df['sentiment_clean'].value_counts()
+
+    # 파이 차트 그리기
+    axes[i].pie(
+        sentiment_counts,
+        labels=sentiment_counts.index.str.upper(),
+        autopct='%1.1f%%',
+        startangle=140,
+        colors=[colors[0] if idx == 'positive' else colors[1] if idx == 'negative' else colors[2] for idx in sentiment_counts.index]
+    )
+    axes[i].set_title(f"{titles[i]} Sentiment Ratio", fontsize=14, fontweight='bold')
+
+plt.tight_layout()
+plt.show()
+
+import os
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+import matplotlib as mpl
+
+# Set standard clean font for English charts (No more font warnings)
+plt.rc('font', family='sans-serif')
+plt.rcParams['axes.unicode_minus'] = False
+
+# 1. Mount Google Drive
+from google.colab import drive
+drive.mount('/content/drive')
+
+# 2. File Path Setup
+survivor_path = "/content/drive/MyDrive/EnText/Survivor_reviews.xlsx"
+agt_path = "/content/drive/MyDrive/EnText/America's Got Talent_reviews.xlsx"
+hk_path = "/content/drive/MyDrive/EnText/hells kitchen_reviews.xlsx"
+
+# Data Loading Function
 def load_data(file_path):
     if not os.path.exists(file_path):
         csv_path = file_path.replace('.xlsx', '_reviews.xlsx - Sheet1.csv')
         if os.path.exists(csv_path):
             return pd.read_csv(csv_path)
+        else:
+            dir_name = os.path.dirname(file_path)
+            base_name = os.path.basename(file_path).split('_')[0]
+            for f in os.listdir(dir_name):
+                if base_name in f and f.endswith('.csv'):
+                    return pd.read_csv(os.path.join(dir_name, f))
+            raise FileNotFoundError(f"File not found: {file_path}")
     return pd.read_excel(file_path)
 
-# ... [Middle part of the code has been truncated for display purposes] ...
-# Handles data manipulation, keyword mapping against sentiments, and generating pie charts
+# Load Datasets
+df_survivor = load_data(survivor_path)
+df_agt = load_data(agt_path)
+df_hk = load_data(hk_path)
+
+# Standardize Sentiment Labels
+for df in [df_survivor, df_agt, df_hk]:
+    df['sentiment_clean'] = df['sentiment'].astype(str).str.lower().replace({
+        '1': 'positive', '-1': 'negative', '0': 'neutral'
+    })
+
+print("Data loaded and font configurations completed successfully!")
+
+# ==========================================
+# [Visualization 2] Top 10 Core Factors by Program (English Labels)
+# ==========================================
+
+keywords_dict = {
+    'Survivor': {
+        'positive': {
+            'strategy|strategic|brain|move|moves': 'Strategic Gameplay',
+            'social|relation|alliance|alliances|loyal|friendship': 'Social Relations & Alliances',
+            'classic|old school|nostalgia|early|beginning|season 1': 'Classic & Old School Nostalgia',
+            'gameplay|game|play|players': 'Overall Gameplay Quality',
+            'alliance|alliances|betray|betrayal|flip|backstab': 'Alliances & Betrayals',
+            'blindside|blindsided|blindsides': 'Blindsides',
+            'immunity|challenge|challenges|win|winner': 'Immunity Challenges',
+            'tribal|council|vote|votes': 'Tribal Council Dynamics',
+            'compete|competition|competitive|race|fight': 'Intense Competition',
+            'survival|survive|camp|fire|food|shelter|island': 'Pure Survival Elements'
+        },
+        'negative': {
+            'twist|twists|rule|rules|advantage|advantages|idol|idols': 'Excessive Rules & Twists',
+            'fake|staged|scripted|rigged|phoney|artificial': 'Artificial & Scripted Production',
+            'boring|dull|slow|repetitive|monotone': 'Boring & Slow Pacing',
+            'edit|edits|screentime|narrative|confessional|confessionals': 'Biased Editing & Screentime',
+            'ruin|ruined|destroy|destroyed|wreck': 'Format Ruined',
+            'disappointed|disappointment|sad|hate|regret|frustrated': 'Viewer Disappointment',
+            'production|producer|producers|jeff|host': 'Excessive Producer Intervention',
+            'unfair|bias|biased|cheat|cheating': 'Lack of Fairness',
+            'predictable|obvious|expected': 'Predictable Outcomes',
+            'lost|change|changed|lost the plot': 'Lost Its Core Identity'
+        }
+    },
+    'AGT': {
+        'positive': {
+            'unique|different|novel|creative': 'Unique & Creative Talents',
+            'talent|skill|ability|powerful|gifted': 'Exceptional Skills',
+            'original|new|fresh': 'Fresh & Original Stages',
+            'dangerous|thrill|scary|exciting|wild|intense': 'Thrilling Performances',
+            'amazing|wonderful|awesome|incredible|spectacular|blown away': 'Spectacular & Amazing Acts',
+            'performance|act|show|stage|routine': 'High-Quality Performances',
+            'golden|buzzer|gold': 'Golden Buzzer Moments',
+            'buzzer|button|x': 'Buzzer Judging System',
+            'judge|simon|howie|heidi|sofia|piers|stern|panel|chemistry': 'Judges\' Chemistry',
+            'audition|auditions|early|start|begin': 'Entertaining Early Auditions'
+        },
+        'negative': {
+            'singer|singers|singing|vocalist|vocalists|song|voice': 'Repetitive Singer Focus',
+            'camera|shot|shots|angle|view|editing': 'Distracting Camera Work',
+            'audience|crowd|reaction|reactions|cutaway|people': 'Excessive Audience Reactions',
+            'sob|cry|crying|sad|pity|tear': 'Forced Melodrama & Tears',
+            'story|backstory|background|life|melodrama': 'Backstory-Over-Talent Editing',
+            'singing competition|voice|idol|vocals|sing': 'Degeneration into Singing Show',
+            'staged|fake|scripted|rigged|set up|fixed': 'Fabricated Stage Directions',
+            'commercial|commercials|ad|ads|break|breaks|interrupt': 'Frequent Commercial Breaks',
+            'annoying|frustrated|irritating|irritated|mad|angry': 'Frustrating Presentation',
+            'lame|boring|cliche|stupid|corny|predictable': 'Cliche & Predictable Formats'
+        }
+    },
+    'Hell\'s Kitchen': {
+        'positive': {
+            'talent|skill|competent|pro|experienced': 'Outstanding Contestant Skills',
+            'gordon|ramsay|host|expert': 'Gordon Ramsay\'s Presence',
+            'feedback|critic|teaching|mentor|advice|say|comment|judge|judging|critique|evaluate|opinion': 'Sharp & Constructive Feedback',
+            'chef|cook|professional': 'Professional Chef Showdowns',
+            'service|dinner|rush|pressure': 'Dinner Service Pressure',
+            'risotto|dish|food|scallop|meat|cooking': 'Signature Menus & Dishes',
+            'kitchen|station|line|team': 'Dynamic Kitchen Environment',
+            'growth|improve|learn|better|progress': 'Contestant Skill Growth',
+            'professional|expert|quality|standards': 'High Professional Standards',
+            'jacket|black jacket|finale|win': 'Symbolism of the Black Jacket'
+        },
+        'negative': {
+            'clueless|amateur|unskilled|bad|terrible|worst|stupid|idiot': 'Incompetent & Unskilled Cast',
+            'drama|fight|argument|conflict|clash|toxic': 'Forced Drama & Conflicts',
+            'psycho|crazy|insane|nuts|mad': 'Erratic Participant Behavior',
+            '': ' ', # Omitted factor (blank)
+            'fail|mistake|error|screw|scallop|risotto': 'Repeated Culinary Failures',
+            'shout|yell|scream|curse|swear|profane|yelling': 'Excessive Screaming & Fatigue',
+            'annoying|frustrated|irritating|irritated|mad|angry': 'Annoying Interpersonal Friction',
+            'fake|staged|scripted|unreal': 'Artificial Reality TV Production',
+            ' ': '  ', # Omitted factor (blank)
+            'argument|bicker|gossip|backstab|whine': 'Trivial Arguments & Bickering'
+        }
+    }
+}
+
+program_dfs = [df_survivor, df_agt, df_hk]
+program_names = ['Survivor', 'AGT', 'Hell\'s Kitchen']
+
+for df, name in zip(program_dfs, program_names):
+
+    pos_reviews = df[df['sentiment_clean'] == 'positive']
+    neg_reviews = df[df['sentiment_clean'] == 'negative']
+
+    total_pos = len(pos_reviews)
+    total_neg = len(neg_reviews)
+
+    # Calculate Positive Factors
+    pos_results = {}
+    pos_counts = {}
+    for eng_kw, label_en in keywords_dict[name]['positive'].items():
+        count = pos_reviews['review_text'].str.contains(eng_kw, case=False, na=False).sum()
+        pos_counts[label_en] = count
+        pos_results[label_en] = (count / total_pos * 100) if total_pos > 0 else 0
+
+    # Calculate Negative Factors
+    neg_results = {}
+    neg_counts = {}
+    for eng_kw, label_en in keywords_dict[name]['negative'].items():
+        if eng_kw.strip() == '':
+            count = 0
+        else:
+            count = neg_reviews['review_text'].str.contains(eng_kw, case=False, na=False).sum()
+        neg_counts[label_en] = count
+        neg_results[label_en] = (count / total_neg * 100) if total_neg > 0 else 0
+
+    # Structuring and Sorting DataFrames
+    df_pos_kw = pd.DataFrame(list(pos_results.items()), columns=['Factor', 'Percentage'])
+    df_pos_kw['Count'] = df_pos_kw['Factor'].map(pos_counts)
+    df_pos_kw = df_pos_kw.sort_values(by='Percentage', ascending=True)
+
+    df_neg_kw = pd.DataFrame(list(neg_results.items()), columns=['Factor', 'Percentage'])
+    df_neg_kw['Count'] = df_neg_kw['Factor'].map(neg_counts)
+    df_neg_kw = df_neg_kw.sort_values(by='Percentage', ascending=True)
 
     # Draw Horizontal Bar Charts
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 5))
@@ -653,7 +1157,7 @@ def load_data(file_path):
     ax2.set_xlabel('Appearance Rate in Negative Reviews (%)', fontsize=11)
     ax2.set_xlim(0, df_neg_kw['Percentage'].max() + 22)
 
-    # Add Data Labels dynamically
+    # Add Data Labels (Skip for blank items)
     for bar, count, label in zip(bars1, df_pos_kw['Count'], df_pos_kw['Factor']):
         if label.strip() != '':
             width = bar.get_width()
