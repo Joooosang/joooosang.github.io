@@ -438,7 +438,104 @@
     <div class="container">
         <section id="intro">
             <h2>1. Introduction</h2>
-            <p>This project was conducted to design the first original content for 'StreamKUS'. Rather than relying on the production team's fleeting intuition or localized trends, we aim to build a robust, universally appealing format. By analyzing a massive scale of actual viewer text data over multiple decades, we identified 'professionalism' and 'psychological strategy' as the core success factors that drive sustained audience enthusiasm. Based on these deeply empirical insights, we propose a new, integrated program format titled 'The Professional'.</p>
+            <p>This project was conducted to design the first original content for 'StreamKUS'. Rather than relying on the production team's fleeting intuition, we aim to build a robust, universally appealing format based on deeply empirical insights.</p>
+            
+            <h3 style="margin-top: 40px; font-size: 1.3rem;">Project Ideation & Strategy Map</h3>
+            <p>This interactive network map illustrates the core strategic pillars established during our initial Padlet brainstorming sessions, balancing audience psychology with empirical data validation mechanisms.</p>
+
+            <!-- Network Graph Container -->
+            <div id="mindmap-network" style="width: 100%; height: 500px; border: 1px solid #eaeaea; border-radius: 12px; background-color: #ffffff; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); margin-top: 20px; margin-bottom: 20px;"></div>
+
+            <!-- Vis.js Library Load -->
+            <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+            
+            <script type="text/javascript">
+                // 1. Nodes Configuration
+                var nodes = new vis.DataSet([
+                    // Central Core
+                    { id: 1, label: 'StreamKUS\nProject Direction', shape: 'circle', size: 35, color: '#820024', font: { color: 'white', size: 16, bold: true } },
+                    
+                    // Core Categories
+                    { id: 2, label: 'Content Drivers\n(Ideas)', shape: 'dot', size: 25, color: '#D4AF37', font: { size: 14, bold: true } },
+                    { id: 3, label: 'Data Validation\n(Facts)', shape: 'dot', size: 25, color: '#4169e1', font: { color: 'white', size: 14, bold: true } },
+                    { id: 4, label: 'Target Reference', shape: 'dot', size: 20, color: '#008080', font: { color: 'white', size: 14, bold: true } },
+
+                    // Ideas Sub-nodes
+                    { id: 21, label: 'Fostering Debates\n& High Engagement', shape: 'dot', size: 15, color: '#f5d56c' },
+                    { id: 22, label: 'Vicarious Pleasure\n& Imagination', shape: 'dot', size: 15, color: '#f5d56c' },
+                    { id: 23, label: 'Intuitive & Dopamine-\nDriven Progression', shape: 'dot', size: 15, color: '#f5d56c' },
+                    { id: 24, label: 'Digital Companionship\n(Reducing Isolation)', shape: 'dot', size: 15, color: '#f5d56c' },
+
+                    // Facts Sub-nodes
+                    { id: 31, label: 'IMDb Review\nText Mining', shape: 'dot', size: 15, color: '#7ba0ff' },
+                    { id: 32, label: 'YouTube HYPE Index', shape: 'dot', size: 15, color: '#7ba0ff' },
+                    { id: 33, label: 'Public Sentiment\n& Demographics', shape: 'dot', size: 15, color: '#7ba0ff' },
+
+                    // Reference Sub-nodes
+                    { id: 41, label: 'Culinary Class Wars\n(Professionalism)', shape: 'dot', size: 12, color: '#4cbabb' },
+                    { id: 42, label: 'Physical: 100\n(Large-scale Survival)', shape: 'dot', size: 12, color: '#4cbabb' },
+                    { id: 43, label: 'Transit Love\n(Interpersonal Relations)', shape: 'dot', size: 12, color: '#4cbabb' }
+                ]);
+
+                // 2. Edges Configuration
+                var edges = new vis.DataSet([
+                    // Central -> Categories
+                    { from: 1, to: 2, width: 3, color: { color: '#ccc' } },
+                    { from: 1, to: 3, width: 3, color: { color: '#ccc' } },
+                    { from: 1, to: 4, width: 2, color: { color: '#e0e0e0' } },
+
+                    // Category -> Sub-nodes (Ideas)
+                    { from: 2, to: 21, color: { color: '#e8e8e8' } },
+                    { from: 2, to: 22, color: { color: '#e8e8e8' } },
+                    { from: 2, to: 23, color: { color: '#e8e8e8' } },
+                    { from: 2, to: 24, color: { color: '#e8e8e8' } },
+
+                    // Category -> Sub-nodes (Facts)
+                    { from: 3, to: 31, color: { color: '#e8e8e8' } },
+                    { from: 3, to: 32, color: { color: '#e8e8e8' } },
+                    { from: 3, to: 33, color: { color: '#e8e8e8' } },
+
+                    // Category -> Sub-nodes (References)
+                    { from: 4, to: 41, color: { color: '#e8e8e8' } },
+                    { from: 4, to: 42, color: { color: '#e8e8e8' } },
+                    { from: 4, to: 43, color: { color: '#e8e8e8' } }
+                ]);
+
+                // 3. Network Initialization
+                var container = document.getElementById('mindmap-network');
+                var data = { nodes: nodes, edges: edges };
+                var options = {
+                    nodes: {
+                        font: { face: 'Segoe UI', size: 12, color: '#333' },
+                        borderWidth: 0,
+                        shadow: true
+                    },
+                    edges: {
+                        smooth: { type: 'continuous' }
+                    },
+                    physics: {
+                        forceAtlas2Based: {
+                            gravitationalConstant: -40,
+                            centralGravity: 0.005,
+                            springLength: 120,
+                            springConstant: 0.08
+                        },
+                        maxVelocity: 50,
+                        solver: 'forceAtlas2Based',
+                        timestep: 0.35,
+                        stabilization: { iterations: 150 }
+                    },
+                    interaction: {
+                        hover: true,
+                        zoomView: false
+                    }
+                };
+                var network = new vis.Network(container, data, options);
+            </script>
+
+            <div style="background: #fff8f8; border-left: 4px solid var(--primary-color); padding: 15px 20px; font-size: 0.95rem; border-radius: 0 8px 8px 0;">
+                <strong> Summary:</strong> Our research framework first defined the core psychological factors driving viewer engagement, such as dynamic tension and vicarious thrill. Rather than relying on intuitive planning, we implemented a quantitative approach using <strong>IMDb text mining</strong> and the <strong>HYPE index</strong> to capture and analyze long-term public reception as the empirical foundation for our proposals.
+            </div>
         </section>
 
         <section id="data">
