@@ -450,11 +450,6 @@
                 <li><strong>Total Analyzed Corpus:</strong> <strong>1,070 valid episode-level text reviews</strong> after data cleaning (Survivor: 888, America's Got Talent: 118, Hell's Kitchen: 64).</li>
             </ul>
 
-            <div class="method-step">
-                <h4>Automated Web Scraping & Data Structuring</h4>
-                <p>We utilized a custom Python scraper built with the assistance of OpenAI's Codex. This script bypassed standard pagination limits by directly querying IMDb's GraphQL API. The scraper did not merely pull text; it extracted metadata including Season, Episode ID, User Rating, and Review Dates. Simultaneously, it performed an initial algorithmic pass to categorize sentiment (Positive, Negative, Neutral) based on user ratings and text polarity. The output was organized into highly structured <code>.xlsx</code> formats for further deep-learning analysis.</p>
-            </div>
-
             <h4 style="margin-top: 40px;">Interactive Season Data Deep-Dive</h4>
             <p>The structured <code>.xlsx</code> data compiled by our scraper allows us to track sentiment progression across entire broadcast histories. Select a program below to explore the detailed Season-Level Overview.</p>
             
@@ -550,6 +545,132 @@
                 <h4>Sentiment Processing & Topic Modeling (BERTopic & Codex)</h4>
                 <p>To move beyond simplistic word clouds, we deployed a BERT-based (Bidirectional Encoder Representations from Transformers) model for contextual sentiment analysis at the sentence level. We combined this with OpenAI Codex to extract coherent topic clusters. Each extracted keyword was then mathematically mapped against the sentiment polarity of its source review, allowing us to generate precise percentage correlations (e.g., proving that 41.2% of all negative reviews in Hell's Kitchen specifically referenced 'Incompetence').</p>
             </div>
+
+            <div class="method-step">
+                <h4>Automated Web Scraping & Data Structuring</h4>
+                <p>This script was utilized to bypass standard pagination limits and directly query the review platform's GraphQL API. It automatically extracted thousands of user reviews, including text, ratings, and timestamps, across multiple seasons and episodes. The gathered raw data was structured into dataframes, forming the foundational dataset for our subsequent sentiment and topic modeling analyses.</p>
+                <div class="code-container">
+<pre><code>import argparse
+import json
+import re
+import time
+from urllib.error import HTTPError
+from urllib.request import Request
+from urllib.request import urlopen
+import pandas as pd
+
+SERIES_ID = "tt0239195"
+GRAPHQL_URL = "https://caching.graphql.imdb.com/"
+OUTPUT_EXCEL = "imdb_survivor_episode_reviews.xlsx"
+
+HEADERS = {
+    "Content-Type": "application/json",
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+    ),
+    "x-imdb-client-name": "imdb-web-next-localized",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+
+def graphql(query, variables=None, max_retries=4):
+    payload = {"query": query, "variables": variables or {}}
+    body = json.dumps(payload).encode("utf-8")
+
+# ... [Middle part of the code has been truncated for display purposes] ...
+# Handles GraphQL nested json responses, pagination loops, and dynamic extraction of user review nodes
+
+    columns = [
+        "season",
+        "episode",
+        "episode_id",
+        "review_date",
+        "user_rating",
+        "sentiment",
+        "review_text",
+        "helpful_up_votes",
+        "helpful_down_votes",
+    ]
+    df = pd.DataFrame(rows, columns=columns)
+    if not df.empty:
+        df["season"] = pd.to_numeric(df["season"], errors="coerce")
+        df["episode"] = pd.to_numeric(df["episode"], errors="coerce")
+        df["review_date"] = pd.to_datetime(df["review_date"], errors="coerce")
+        df = df.sort_values(["season", "episode", "review_date"], ascending=[True, True, False])
+
+    df.to_excel(output_excel, index=False)
+    print(df.shape)
+    print(f"저장 완료: {output_excel}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--series-id", default=SERIES_ID)
+    parser.add_argument("--output", default=OUTPUT_EXCEL)
+    args = parser.parse_args()
+    main(series_id=args.series_id, output_excel=args.output)</code></pre>
+                </div>
+            </div>
+
+            <div class="method-step">
+                <h4>Data Visualization & Chart Generation</h4>
+                <p>This script was employed to process the classified sentiment data and generate intuitive visual representations. It calculates the frequency of key extracted topics based on their positive or negative polarities, and dynamically renders both the overall sentiment distribution (pie charts) and the top critical factors (horizontal bar charts) that act as the empirical basis for our content proposals.</p>
+                <div class="code-container">
+<pre><code>import os
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Install openpyxl for reading Excel files
+!pip install openpyxl
+
+# 1. Google Drive Mount
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Data loading function handling both Excel and CSV formats
+def load_data(file_path):
+    if not os.path.exists(file_path):
+        csv_path = file_path.replace('.xlsx', '_reviews.xlsx - Sheet1.csv')
+        if os.path.exists(csv_path):
+            return pd.read_csv(csv_path)
+    return pd.read_excel(file_path)
+
+# ... [Middle part of the code has been truncated for display purposes] ...
+# Handles data manipulation, keyword mapping against sentiments, and generating pie charts
+
+    # Draw Horizontal Bar Charts
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 5))
+
+    # Top 10 Positive Factors Chart
+    bars1 = ax1.barh(df_pos_kw['Factor'], df_pos_kw['Percentage'], color='royalblue')
+    ax1.set_title(f"{name} - Top 10 Positive Factors", fontsize=13, fontweight='bold')
+    ax1.set_xlabel('Appearance Rate in Positive Reviews (%)', fontsize=11)
+    ax1.set_xlim(0, df_pos_kw['Percentage'].max() + 22)
+
+    # Top 10 Negative Factors Chart
+    bars2 = ax2.barh(df_neg_kw['Factor'], df_neg_kw['Percentage'], color='crimson')
+    ax2.set_title(f"{name} - Top 10 Negative Factors", fontsize=13, fontweight='bold')
+    ax2.set_xlabel('Appearance Rate in Negative Reviews (%)', fontsize=11)
+    ax2.set_xlim(0, df_neg_kw['Percentage'].max() + 22)
+
+    # Add Data Labels dynamically
+    for bar, count, label in zip(bars1, df_pos_kw['Count'], df_pos_kw['Factor']):
+        if label.strip() != '':
+            width = bar.get_width()
+            ax1.text(width + 0.5, bar.get_y() + bar.get_height()/2, f'{width:.1f}% ({count})',
+                     va='center', ha='left', fontsize=9, fontweight='bold')
+
+    for bar, count, label in zip(bars2, df_neg_kw['Count'], df_neg_kw['Factor']):
+        if label.strip() != '':
+            width = bar.get_width()
+            ax2.text(width + 0.5, bar.get_y() + bar.get_height()/2, f'{width:.1f}% ({count})',
+                     va='center', ha='left', fontsize=9, fontweight='bold')
+
+    plt.tight_layout()
+    plt.show()</code></pre>
+                </div>
+            </div>
+
         </section>
 
         <section id="findings">
