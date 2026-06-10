@@ -373,8 +373,8 @@
         .pie-survivor { background: conic-gradient(var(--pie-pos) 0% 44.1%, var(--pie-neg) 44.1% 90.7%, var(--pie-neu) 90.7% 100%); }
         .pie-agt { background: conic-gradient(var(--pie-pos) 0% 51.7%, var(--pie-neg) 51.7% 76.3%, var(--pie-neu) 76.3% 100%); }
         .pie-hk { background: conic-gradient(var(--pie-pos) 0% 54.7%, var(--pie-neg) 54.7% 81.3%, var(--pie-neu) 81.3% 100%); }
-        .pie-legend { display: flex; justify-content: center; gap: 15px; font-size: 0.85rem; font-weight: bold; }
-        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .pie-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 0.85rem; font-weight: bold; }
+        .legend-item { display: flex; align-items: center; gap: 5px; color: #333; }
         .color-box { width: 14px; height: 14px; border-radius: 3px; }
         .color-pos { background-color: var(--pie-pos); }
         .color-neg { background-color: var(--pie-neg); }
@@ -436,6 +436,8 @@
     </header>
 
     <div class="container">
+        
+        <!-- SECTION 1: INTRODUCTION (NETWORK GRAPH) -->
         <section id="intro">
             <h2>1. Introduction</h2>
             <p>This project was conducted to design the first original content for 'StreamKUS'. Rather than relying on the production team's fleeting intuition, we aim to build a robust, universally appealing format based on deeply empirical insights.</p>
@@ -444,100 +446,132 @@
             <p>This interactive network map illustrates the core strategic pillars established during our initial Padlet brainstorming sessions, balancing audience psychology with empirical data validation mechanisms.</p>
 
             <!-- Network Graph Container -->
-            <div id="mindmap-network" style="width: 100%; height: 500px; border: 1px solid #eaeaea; border-radius: 12px; background-color: #ffffff; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); margin-top: 20px; margin-bottom: 20px;"></div>
+            <div id="mindmap-network" style="width: 100%; height: 600px; border: 1px solid #eaeaea; border-radius: 12px; background-color: #ffffff; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); margin-top: 20px; margin-bottom: 20px;"></div>
 
             <!-- Vis.js Library Load -->
             <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
             
             <script type="text/javascript">
-                // 1. Nodes Configuration
+                // 1. Nodes Configuration (대폭 확장 & 색상 수정)
                 var nodes = new vis.DataSet([
-                    // Central Core
-                    { id: 1, label: 'StreamKUS\nProject Direction', shape: 'circle', size: 35, color: '#820024', font: { color: 'white', size: 16, bold: true } },
+                    // Central Core (흰색 폰트 유지 - 배경이 어두운 원형)
+                    { id: 1, label: 'StreamKUS\nProject Direction', shape: 'circle', size: 40, color: '#820024', font: { color: 'white', size: 16, bold: true } },
                     
-                    // Core Categories
-                    { id: 2, label: 'Content Drivers\n(Ideas)', shape: 'dot', size: 25, color: '#D4AF37', font: { size: 14, bold: true } },
-                    { id: 3, label: 'Data Validation\n(Facts)', shape: 'dot', size: 25, color: '#4169e1', font: { color: 'white', size: 14, bold: true } },
-                    { id: 4, label: 'Target Reference', shape: 'dot', size: 20, color: '#008080', font: { color: 'white', size: 14, bold: true } },
+                    // L1 Categories (폰트 컬러 #333으로 변경하여 가시성 확보)
+                    { id: 2, label: 'Content Drivers\n(Ideas)', shape: 'dot', size: 25, color: '#D4AF37', font: { color: '#333', size: 14, bold: true } },
+                    { id: 3, label: 'Data Validation\n(Facts)', shape: 'dot', size: 25, color: '#4169e1', font: { color: '#333', size: 14, bold: true } },
+                    { id: 4, label: 'Target References', shape: 'dot', size: 25, color: '#008080', font: { color: '#333', size: 14, bold: true } },
 
-                    // Ideas Sub-nodes
-                    { id: 21, label: 'Fostering Debates\n& High Engagement', shape: 'dot', size: 15, color: '#f5d56c' },
-                    { id: 22, label: 'Vicarious Pleasure\n& Imagination', shape: 'dot', size: 15, color: '#f5d56c' },
-                    { id: 23, label: 'Intuitive & Dopamine-\nDriven Progression', shape: 'dot', size: 15, color: '#f5d56c' },
-                    { id: 24, label: 'Digital Companionship\n(Reducing Isolation)', shape: 'dot', size: 15, color: '#f5d56c' },
+                    // L2 Ideas
+                    { id: 21, label: 'Fostering Debates', shape: 'dot', size: 15, color: '#f5d56c', font: { color: '#333' } },
+                    { id: 22, label: 'Vicarious Pleasure', shape: 'dot', size: 15, color: '#f5d56c', font: { color: '#333' } },
+                    { id: 23, label: 'Dopamine Progression', shape: 'dot', size: 15, color: '#f5d56c', font: { color: '#333' } },
+                    { id: 24, label: 'Digital Companionship', shape: 'dot', size: 15, color: '#f5d56c', font: { color: '#333' } },
+                    
+                    // L3 Ideas Details (패들렛 상세 내용)
+                    { id: 211, label: 'Conflicting Characters', shape: 'dot', size: 10, color: '#fcf0c0', font: { color: '#444', size: 11 } },
+                    { id: 212, label: 'Active Discussions', shape: 'dot', size: 10, color: '#fcf0c0', font: { color: '#444', size: 11 } },
+                    { id: 221, label: 'Extreme Situations', shape: 'dot', size: 10, color: '#fcf0c0', font: { color: '#444', size: 11 } },
+                    { id: 231, label: 'Fast-paced Editing', shape: 'dot', size: 10, color: '#fcf0c0', font: { color: '#444', size: 11 } },
+                    { id: 232, label: 'Provocative Plots', shape: 'dot', size: 10, color: '#fcf0c0', font: { color: '#444', size: 11 } },
+                    { id: 241, label: 'Relatable Cast', shape: 'dot', size: 10, color: '#fcf0c0', font: { color: '#444', size: 11 } },
+                    { id: 242, label: 'Vlog-style Realism', shape: 'dot', size: 10, color: '#fcf0c0', font: { color: '#444', size: 11 } },
 
-                    // Facts Sub-nodes
-                    { id: 31, label: 'IMDb Review\nText Mining', shape: 'dot', size: 15, color: '#7ba0ff' },
-                    { id: 32, label: 'YouTube HYPE Index', shape: 'dot', size: 15, color: '#7ba0ff' },
-                    { id: 33, label: 'Public Sentiment\n& Demographics', shape: 'dot', size: 15, color: '#7ba0ff' },
+                    // L2 Facts
+                    { id: 31, label: 'IMDb Text Mining', shape: 'dot', size: 15, color: '#7ba0ff', font: { color: '#333' } },
+                    { id: 32, label: 'YouTube HYPE Index', shape: 'dot', size: 15, color: '#7ba0ff', font: { color: '#333' } },
+                    { id: 33, label: 'Public Sentiment', shape: 'dot', size: 15, color: '#7ba0ff', font: { color: '#333' } },
 
-                    // Reference Sub-nodes
-                    { id: 41, label: 'Culinary Class Wars\n(Professionalism)', shape: 'dot', size: 12, color: '#4cbabb' },
-                    { id: 42, label: 'Physical: 100\n(Large-scale Survival)', shape: 'dot', size: 12, color: '#4cbabb' },
-                    { id: 43, label: 'Transit Love\n(Interpersonal Relations)', shape: 'dot', size: 12, color: '#4cbabb' }
+                    // L3 Facts Details (패들렛 상세 내용)
+                    { id: 311, label: 'Sentiment Analysis', shape: 'dot', size: 10, color: '#c4d7ff', font: { color: '#444', size: 11 } },
+                    { id: 312, label: 'BERTopic Modeling', shape: 'dot', size: 10, color: '#c4d7ff', font: { color: '#444', size: 11 } },
+                    { id: 321, label: 'Real-time Trends', shape: 'dot', size: 10, color: '#c4d7ff', font: { color: '#444', size: 11 } },
+                    { id: 322, label: 'Social Buzz', shape: 'dot', size: 10, color: '#c4d7ff', font: { color: '#444', size: 11 } },
+                    { id: 331, label: 'Age/Gender Filtering', shape: 'dot', size: 10, color: '#c4d7ff', font: { color: '#444', size: 11 } },
+                    { id: 332, label: 'Global vs Local', shape: 'dot', size: 10, color: '#c4d7ff', font: { color: '#444', size: 11 } },
+
+                    // L2 References
+                    { id: 41, label: 'Culinary Class Wars', shape: 'dot', size: 15, color: '#4cbabb', font: { color: '#333' } },
+                    { id: 42, label: 'Physical: 100', shape: 'dot', size: 15, color: '#4cbabb', font: { color: '#333' } },
+                    { id: 43, label: 'Transit Love', shape: 'dot', size: 15, color: '#4cbabb', font: { color: '#333' } },
+
+                    // L3 References Details (패들렛 상세 내용)
+                    { id: 411, label: 'Professionalism', shape: 'dot', size: 10, color: '#a1e6e6', font: { color: '#444', size: 11 } },
+                    { id: 412, label: 'MasterChef / Shark Tank', shape: 'dot', size: 10, color: '#a1e6e6', font: { color: '#444', size: 11 } },
+                    { id: 421, label: 'Large-scale Survival', shape: 'dot', size: 10, color: '#a1e6e6', font: { color: '#444', size: 11 } },
+                    { id: 422, label: 'SNL / Talk Shows', shape: 'dot', size: 10, color: '#a1e6e6', font: { color: '#444', size: 11 } },
+                    { id: 431, label: 'Interpersonal Relations', shape: 'dot', size: 10, color: '#a1e6e6', font: { color: '#444', size: 11 } }
                 ]);
 
                 // 2. Edges Configuration
                 var edges = new vis.DataSet([
-                    // Central -> Categories
+                    // Central -> L1
                     { from: 1, to: 2, width: 3, color: { color: '#ccc' } },
                     { from: 1, to: 3, width: 3, color: { color: '#ccc' } },
-                    { from: 1, to: 4, width: 2, color: { color: '#e0e0e0' } },
+                    { from: 1, to: 4, width: 3, color: { color: '#ccc' } },
 
-                    // Category -> Sub-nodes (Ideas)
+                    // L1 -> L2 (Ideas)
                     { from: 2, to: 21, color: { color: '#e8e8e8' } },
                     { from: 2, to: 22, color: { color: '#e8e8e8' } },
                     { from: 2, to: 23, color: { color: '#e8e8e8' } },
                     { from: 2, to: 24, color: { color: '#e8e8e8' } },
+                    
+                    // L2 -> L3 (Ideas Details)
+                    { from: 21, to: 211, color: { color: '#f0f0f0' } },
+                    { from: 21, to: 212, color: { color: '#f0f0f0' } },
+                    { from: 22, to: 221, color: { color: '#f0f0f0' } },
+                    { from: 23, to: 231, color: { color: '#f0f0f0' } },
+                    { from: 23, to: 232, color: { color: '#f0f0f0' } },
+                    { from: 24, to: 241, color: { color: '#f0f0f0' } },
+                    { from: 24, to: 242, color: { color: '#f0f0f0' } },
 
-                    // Category -> Sub-nodes (Facts)
+                    // L1 -> L2 (Facts)
                     { from: 3, to: 31, color: { color: '#e8e8e8' } },
                     { from: 3, to: 32, color: { color: '#e8e8e8' } },
                     { from: 3, to: 33, color: { color: '#e8e8e8' } },
+                    
+                    // L2 -> L3 (Facts Details)
+                    { from: 31, to: 311, color: { color: '#f0f0f0' } },
+                    { from: 31, to: 312, color: { color: '#f0f0f0' } },
+                    { from: 32, to: 321, color: { color: '#f0f0f0' } },
+                    { from: 32, to: 322, color: { color: '#f0f0f0' } },
+                    { from: 33, to: 331, color: { color: '#f0f0f0' } },
+                    { from: 33, to: 332, color: { color: '#f0f0f0' } },
 
-                    // Category -> Sub-nodes (References)
+                    // L1 -> L2 (References)
                     { from: 4, to: 41, color: { color: '#e8e8e8' } },
                     { from: 4, to: 42, color: { color: '#e8e8e8' } },
-                    { from: 4, to: 43, color: { color: '#e8e8e8' } }
+                    { from: 4, to: 43, color: { color: '#e8e8e8' } },
+                    
+                    // L2 -> L3 (References Details)
+                    { from: 41, to: 411, color: { color: '#f0f0f0' } },
+                    { from: 41, to: 412, color: { color: '#f0f0f0' } },
+                    { from: 42, to: 421, color: { color: '#f0f0f0' } },
+                    { from: 42, to: 422, color: { color: '#f0f0f0' } },
+                    { from: 43, to: 431, color: { color: '#f0f0f0' } }
                 ]);
 
                 // 3. Network Initialization
                 var container = document.getElementById('mindmap-network');
                 var data = { nodes: nodes, edges: edges };
                 var options = {
-                    nodes: {
-                        font: { face: 'Segoe UI', size: 12, color: '#333' },
-                        borderWidth: 0,
-                        shadow: true
-                    },
-                    edges: {
-                        smooth: { type: 'continuous' }
-                    },
+                    nodes: { font: { face: 'Segoe UI' }, borderWidth: 0, shadow: true },
+                    edges: { smooth: { type: 'continuous' } },
                     physics: {
-                        forceAtlas2Based: {
-                            gravitationalConstant: -40,
-                            centralGravity: 0.005,
-                            springLength: 120,
-                            springConstant: 0.08
-                        },
-                        maxVelocity: 50,
-                        solver: 'forceAtlas2Based',
-                        timestep: 0.35,
-                        stabilization: { iterations: 150 }
+                        forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 120, springConstant: 0.08 },
+                        maxVelocity: 50, solver: 'forceAtlas2Based', timestep: 0.35, stabilization: { iterations: 150 }
                     },
-                    interaction: {
-                        hover: true,
-                        zoomView: false
-                    }
+                    interaction: { hover: true, zoomView: false }
                 };
                 var network = new vis.Network(container, data, options);
             </script>
 
             <div style="background: #fff8f8; border-left: 4px solid var(--primary-color); padding: 15px 20px; font-size: 0.95rem; border-radius: 0 8px 8px 0;">
-                <strong> Summary:</strong> Our research framework first defined the core psychological factors driving viewer engagement, such as dynamic tension and vicarious thrill. Rather than relying on intuitive planning, we implemented a quantitative approach using <strong>IMDb text mining</strong> and the <strong>HYPE index</strong> to capture and analyze long-term public reception as the empirical foundation for our proposals.
+                <strong>💡 Summary:</strong> Our research framework first defined the core psychological factors driving viewer engagement, such as dynamic tension and vicarious thrill. Rather than relying on intuitive planning, we implemented a quantitative approach using <strong>IMDb text mining</strong> and the <strong>HYPE index</strong> to capture and analyze long-term public reception as the empirical foundation for our proposals.
             </div>
         </section>
 
+        <!-- SECTION 2: DATA & EXTRACTED DETAILS -->
         <section id="data">
             <h2>2. Data Collection Process & Extracted Detailed Data</h2>
             <ul>
@@ -557,6 +591,7 @@
                     <button class="tab-btn" onclick="openTab(event, 'agt-tab')">America's Got Talent</button>
                 </div>
                 
+                <!-- SURVIVOR TAB -->
                 <div id="survivor-tab" class="tab-content active">
                     <div class="dashboard-overview">
                         <div class="stat-box">
@@ -581,6 +616,7 @@
                     <div class="season-scroll-container" id="survivor-seasons"></div>
                 </div>
 
+                <!-- HELL'S KITCHEN TAB -->
                 <div id="hk-tab" class="tab-content">
                     <div class="dashboard-overview">
                         <div class="stat-box">
@@ -605,6 +641,7 @@
                     <div class="season-scroll-container" id="hk-seasons"></div>
                 </div>
 
+                <!-- AGT TAB -->
                 <div id="agt-tab" class="tab-content">
                     <div class="dashboard-overview">
                         <div class="stat-box">
@@ -631,6 +668,7 @@
             </div>
         </section>
 
+        <!-- SECTION 3: ANALYSIS METHODS -->
         <section id="methods">
             <h2>3. Text Mining Methods & Analysis Scripts</h2>
             <div class="method-step">
@@ -654,9 +692,7 @@ import time
 from urllib.error import HTTPError
 from urllib.request import Request
 from urllib.request import urlopen
-
 import pandas as pd
-
 
 SERIES_ID = "tt0239195"
 GRAPHQL_URL = "https://caching.graphql.imdb.com/"
@@ -672,306 +708,23 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
 }
 
-
 def graphql(query, variables=None, max_retries=4):
     payload = {"query": query, "variables": variables or {}}
     body = json.dumps(payload).encode("utf-8")
 
-    for attempt in range(max_retries):
-        request = Request(GRAPHQL_URL, data=body, headers=HEADERS, method="POST")
-        try:
-            with urlopen(request, timeout=60) as response:
-                data = json.loads(response.read().decode("utf-8"))
-            if data.get("errors"):
-                raise RuntimeError(data["errors"])
-            return data["data"]
-        except HTTPError as error:
-            detail = error.read().decode("utf-8", errors="replace")
-            if attempt == max_retries - 1:
-                raise RuntimeError(f"HTTP {error.code}: {detail[:500]}") from error
-        except Exception:
-            if attempt == max_retries - 1:
-                raise
-        time.sleep(2**attempt)
-
-
-def get_seasons(series_id):
-    query = """
-    query Seasons($id: ID!) {
-      title(id: $id) {
-        episodes {
-          displayableSeasons(first: 100) {
-            edges {
-              node {
-                season
-                text
-              }
-            }
-          }
-        }
-      }
-    }
-    """
-    data = graphql(query, {"id": series_id})
-    edges = data["title"]["episodes"]["displayableSeasons"]["edges"]
-    seasons = [edge["node"]["season"] for edge in edges]
-    return sorted(seasons, key=lambda value: int(value) if value.isdigit() else 10**9)
-
-
-def get_episodes_for_season(series_id, season):
-    query = """
-    query Episodes($id: ID!, $season: String!, $after: ID) {
-      title(id: $id) {
-        episodes {
-          episodes(first: 25, after: $after, filter: {includeSeasons: [$season]}) {
-            total
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-            edges {
-              node {
-                id
-                titleText {
-                  text
-                }
-                series {
-                  displayableEpisodeNumber {
-                    displayableSeason {
-                      season
-                      text
-                    }
-                    episodeNumber {
-                      episodeNumber
-                      text
-                    }
-                  }
-                }
-                ratingsSummary {
-                  aggregateRating
-                  voteCount
-                }
-                reviews(first: 1) {
-                  total
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    """
-    episodes = []
-    after = None
-    while True:
-        data = graphql(query, {"id": series_id, "season": season, "after": after})
-        conn = data["title"]["episodes"]["episodes"]
-        for edge in conn["edges"]:
-            node = edge["node"]
-            display_no = node["series"]["displayableEpisodeNumber"]
-            episodes.append(
-                {
-                    "episode_id": node["id"],
-                    "season": display_no["displayableSeason"]["season"],
-                    "episode": display_no["episodeNumber"]["episodeNumber"],
-                    "episode_title": node["titleText"]["text"],
-                    "episode_imdb_rating": node.get("ratingsSummary", {}).get("aggregateRating"),
-                    "episode_vote_count": node.get("ratingsSummary", {}).get("voteCount"),
-                    "episode_review_count": node.get("reviews", {}).get("total", 0),
-                }
-            )
-
-        page_info = conn["pageInfo"]
-        if not page_info["hasNextPage"]:
-            break
-        after = page_info["endCursor"]
-        time.sleep(0.2)
-
-    return episodes
-
-
-def get_episode_reviews(episode_id):
-    query = """
-    query Reviews($id: ID!, $after: ID) {
-          title(id: $id) {
-        reviews(first: 25, after: $after, sort: {by: SUBMISSION_DATE, order: DESC}) {
-          total
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-          edges {
-            node {
-              id
-              authorRating
-              spoiler
-              submissionDate
-              summary {
-                originalText
-              }
-              text {
-                originalText {
-                  plainText
-                }
-              }
-              helpfulness {
-                upVotes
-                downVotes
-                score
-              }
-            }
-          }
-        }
-      }
-    }
-    """
-    reviews = []
-    after = None
-    while True:
-        try:
-            data = graphql(query, {"id": episode_id, "after": after})
-        except RuntimeError as error:
-            if "BAD_USER_INPUT" in str(error):
-                return reviews
-            raise
-        conn = data["title"]["reviews"]
-        for edge in conn["edges"]:
-            review = edge["node"]
-            text = ((review.get("text") or {}).get("originalText") or {}).get("plainText")
-            reviews.append(
-                {
-                    "review_id": review.get("id"),
-                    "review_date": review.get("submissionDate"),
-                    "user_rating": review.get("authorRating"),
-                    "spoiler": review.get("spoiler"),
-                    "review_title": (review.get("summary") or {}).get("originalText"),
-                    "review_text": text,
-                    "helpful_up_votes": (review.get("helpfulness") or {}).get("upVotes"),
-                    "helpful_down_votes": (review.get("helpfulness") or {}).get("downVotes"),
-                    "helpfulness_score": (review.get("helpfulness") or {}).get("score"),
-                }
-            )
-
-        page_info = conn["pageInfo"]
-        if not page_info["hasNextPage"]:
-            break
-        after = page_info["endCursor"]
-        time.sleep(0.2)
-    return reviews
-
-
-def score_text_sentiment(text):
-    text = (text or "").lower()
-    positive_words = {
-        "great",
-        "good",
-        "excellent",
-        "amazing",
-        "best",
-        "love",
-        "loved",
-        "enjoy",
-        "enjoyed",
-        "fun",
-        "interesting",
-        "perfect",
-        "strong",
-        "iconic",
-        "legendary",
-        "fantastic",
-        "solid",
-    }
-    negative_words = {
-        "bad",
-        "boring",
-        "worst",
-        "awful",
-        "terrible",
-        "poor",
-        "hate",
-        "hated",
-        "disappointing",
-        "weak",
-        "slow",
-        "dull",
-        "predictable",
-        "annoying",
-        "mess",
-        "waste",
-    }
-    words = re.findall(r"[a-z']+", text)
-    score = sum(word in positive_words for word in words) - sum(word in negative_words for word in words)
-    if score > 0:
-        return "positive"
-    if score < 0:
-        return "negative"
-    return "neutral"
-
-
-def classify_sentiment(rating, text):
-    if pd.notna(rating):
-        rating = int(rating)
-        if rating >= 7:
-            return "positive"
-        if rating <= 4:
-            return "negative"
-        return "neutral"
-    return score_text_sentiment(text)
-
-
-def main(series_id=SERIES_ID, output_excel=OUTPUT_EXCEL):
-    seasons = get_seasons(series_id)
-    print(f"시즌 {len(seasons)}개 확인: {', '.join(seasons[:10])} ... {seasons[-1]}", flush=True)
-
-    episodes = []
-    for season in seasons:
-        season_episodes = get_episodes_for_season(series_id, season)
-        episodes.extend(season_episodes)
-        print(f"시즌 {season}: 회차 {len(season_episodes)}개", flush=True)
-        time.sleep(0.2)
-
-    rows = []
-    total_episodes = len(episodes)
-    for index, episode in enumerate(episodes, start=1):
-        if not episode.get("episode_review_count"):
-            print(
-                f"{index}/{total_episodes} "
-                f"S{episode['season']}E{episode['episode']} {episode['episode_id']}: 리뷰 0개",
-                flush=True,
-            )
-            continue
-
-        reviews = get_episode_reviews(episode["episode_id"])
-        for review in reviews:
-            row = {**episode, **review}
-            row["sentiment"] = classify_sentiment(row.get("user_rating"), row.get("review_text"))
-            rows.append(row)
-        print(
-            f"{index}/{total_episodes} "
-            f"S{episode['season']}E{episode['episode']} {episode['episode_id']}: 리뷰 {len(reviews)}개"
-            ,
-            flush=True,
-        )
-        time.sleep(0.25)
+# ... [Middle part of the code has been truncated for display purposes] ...
+# Handles GraphQL nested json responses, pagination loops, and dynamic extraction of user review nodes
 
     columns = [
         "season",
         "episode",
         "episode_id",
-        "episode_title",
-        "episode_imdb_rating",
-        "episode_vote_count",
-        "episode_review_count",
-        "review_id",
         "review_date",
         "user_rating",
         "sentiment",
-        "spoiler",
-        "review_title",
         "review_text",
         "helpful_up_votes",
         "helpful_down_votes",
-        "helpfulness_score",
     ]
     df = pd.DataFrame(rows, columns=columns)
     if not df.empty:
@@ -982,17 +735,14 @@ def main(series_id=SERIES_ID, output_excel=OUTPUT_EXCEL):
 
     df.to_excel(output_excel, index=False)
     print(df.shape)
-    print(df.head(10).to_string(index=False))
     print(f"저장 완료: {output_excel}")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--series-id", default=SERIES_ID)
     parser.add_argument("--output", default=OUTPUT_EXCEL)
     args = parser.parse_args()
-    main(series_id=args.series_id, output_excel=args.output)
-</code></pre>
+    main(series_id=args.series_id, output_excel=args.output)</code></pre>
                 </div>
             </div>
 
@@ -1008,236 +758,20 @@ import matplotlib.pyplot as plt
 # Install openpyxl for reading Excel files
 !pip install openpyxl
 
-# 1. 구글 드라이브 마운트
+# 1. Google Drive Mount
 from google.colab import drive
 drive.mount('/content/drive')
 
-# 2. 파일 경로 설정 (지정하신 경로 적용)
-survivor_path = "/content/drive/MyDrive/EnText/Survivor_reviews.xlsx"
-agt_path = "/content/drive/MyDrive/EnText/America's Got Talent_reviews.xlsx"
-hk_path = "/content/drive/MyDrive/EnText/hells kitchen_reviews.xlsx"
-
-# 파일 로드 함수 (포맷에 맞게 read_excel 또는 read_csv 처리)
-def load_data(file_path):
-    if not os.path.exists(file_path):
-        # 만약 확장자가 .xlsx이지만 실제 내부는 csv 형태로 저장된 경우를 대비한 예외 처리
-        csv_path = file_path.replace('.xlsx', '_reviews.xlsx - Sheet1.csv')
-        if os.path.exists(csv_path):
-            return pd.read_csv(csv_path)
-        else:
-            # 파일명 형태가 다를 경우 유연하게 매칭
-            dir_name = os.path.dirname(file_path)
-            base_name = os.path.basename(file_path).split('_')[0]
-            for f in os.listdir(dir_name):
-                if base_name in f and f.endswith('.csv'):
-                    return pd.read_csv(os.path.join(dir_name, f))
-            raise FileNotFoundError(f"파일을 찾을 수 없습니다: {file_path}")
-    return pd.read_excel(file_path)
-
-# 데이터 불러오기
-df_survivor = load_data(survivor_path)
-df_agt = load_data(agt_path)
-df_hk = load_data(hk_path)
-
-print("데이터 로드 완료!")
-# ==========================================
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-dfs = [df_survivor, df_agt, df_hk]
-titles = ['Survivor', "America's Got Talent", "Hell's Kitchen"]
-colors = ['#4CAF50', '#F44336', '#9E9E9E'] # 긍정(초록), 부정(빨강), 중립(회색) 기준 설정
-
-for i, df in enumerate(dfs):
-    # 데이터셋의 구조에 맞춰 감성 라벨 표준화
-    df['sentiment_clean'] = df['sentiment'].astype(str).str.lower().replace({
-        '1': 'positive', '-1': 'negative', '0': 'neutral'
-    })
-
-    sentiment_counts = df['sentiment_clean'].value_counts()
-
-    # 파이 차트 그리기
-    axes[i].pie(
-        sentiment_counts,
-        labels=sentiment_counts.index.str.upper(),
-        autopct='%1.1f%%',
-        startangle=140,
-        colors=[colors[0] if idx == 'positive' else colors[1] if idx == 'negative' else colors[2] for idx in sentiment_counts.index]
-    )
-    axes[i].set_title(f"{titles[i]} Sentiment Ratio", fontsize=14, fontweight='bold')
-
-plt.tight_layout()
-plt.show()
-
-import os
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
-import matplotlib as mpl
-
-# Set standard clean font for English charts (No more font warnings)
-plt.rc('font', family='sans-serif')
-plt.rcParams['axes.unicode_minus'] = False
-
-# 1. Mount Google Drive
-from google.colab import drive
-drive.mount('/content/drive')
-
-# 2. File Path Setup
-survivor_path = "/content/drive/MyDrive/EnText/Survivor_reviews.xlsx"
-agt_path = "/content/drive/MyDrive/EnText/America's Got Talent_reviews.xlsx"
-hk_path = "/content/drive/MyDrive/EnText/hells kitchen_reviews.xlsx"
-
-# Data Loading Function
+# Data loading function handling both Excel and CSV formats
 def load_data(file_path):
     if not os.path.exists(file_path):
         csv_path = file_path.replace('.xlsx', '_reviews.xlsx - Sheet1.csv')
         if os.path.exists(csv_path):
             return pd.read_csv(csv_path)
-        else:
-            dir_name = os.path.dirname(file_path)
-            base_name = os.path.basename(file_path).split('_')[0]
-            for f in os.listdir(dir_name):
-                if base_name in f and f.endswith('.csv'):
-                    return pd.read_csv(os.path.join(dir_name, f))
-            raise FileNotFoundError(f"File not found: {file_path}")
     return pd.read_excel(file_path)
 
-# Load Datasets
-df_survivor = load_data(survivor_path)
-df_agt = load_data(agt_path)
-df_hk = load_data(hk_path)
-
-# Standardize Sentiment Labels
-for df in [df_survivor, df_agt, df_hk]:
-    df['sentiment_clean'] = df['sentiment'].astype(str).str.lower().replace({
-        '1': 'positive', '-1': 'negative', '0': 'neutral'
-    })
-
-print("Data loaded and font configurations completed successfully!")
-
-# ==========================================
-# [Visualization 2] Top 10 Core Factors by Program (English Labels)
-# ==========================================
-
-keywords_dict = {
-    'Survivor': {
-        'positive': {
-            'strategy|strategic|brain|move|moves': 'Strategic Gameplay',
-            'social|relation|alliance|alliances|loyal|friendship': 'Social Relations & Alliances',
-            'classic|old school|nostalgia|early|beginning|season 1': 'Classic & Old School Nostalgia',
-            'gameplay|game|play|players': 'Overall Gameplay Quality',
-            'alliance|alliances|betray|betrayal|flip|backstab': 'Alliances & Betrayals',
-            'blindside|blindsided|blindsides': 'Blindsides',
-            'immunity|challenge|challenges|win|winner': 'Immunity Challenges',
-            'tribal|council|vote|votes': 'Tribal Council Dynamics',
-            'compete|competition|competitive|race|fight': 'Intense Competition',
-            'survival|survive|camp|fire|food|shelter|island': 'Pure Survival Elements'
-        },
-        'negative': {
-            'twist|twists|rule|rules|advantage|advantages|idol|idols': 'Excessive Rules & Twists',
-            'fake|staged|scripted|rigged|phoney|artificial': 'Artificial & Scripted Production',
-            'boring|dull|slow|repetitive|monotone': 'Boring & Slow Pacing',
-            'edit|edits|screentime|narrative|confessional|confessionals': 'Biased Editing & Screentime',
-            'ruin|ruined|destroy|destroyed|wreck': 'Format Ruined',
-            'disappointed|disappointment|sad|hate|regret|frustrated': 'Viewer Disappointment',
-            'production|producer|producers|jeff|host': 'Excessive Producer Intervention',
-            'unfair|bias|biased|cheat|cheating': 'Lack of Fairness',
-            'predictable|obvious|expected': 'Predictable Outcomes',
-            'lost|change|changed|lost the plot': 'Lost Its Core Identity'
-        }
-    },
-    'AGT': {
-        'positive': {
-            'unique|different|novel|creative': 'Unique & Creative Talents',
-            'talent|skill|ability|powerful|gifted': 'Exceptional Skills',
-            'original|new|fresh': 'Fresh & Original Stages',
-            'dangerous|thrill|scary|exciting|wild|intense': 'Thrilling Performances',
-            'amazing|wonderful|awesome|incredible|spectacular|blown away': 'Spectacular & Amazing Acts',
-            'performance|act|show|stage|routine': 'High-Quality Performances',
-            'golden|buzzer|gold': 'Golden Buzzer Moments',
-            'buzzer|button|x': 'Buzzer Judging System',
-            'judge|simon|howie|heidi|sofia|piers|stern|panel|chemistry': 'Judges\' Chemistry',
-            'audition|auditions|early|start|begin': 'Entertaining Early Auditions'
-        },
-        'negative': {
-            'singer|singers|singing|vocalist|vocalists|song|voice': 'Repetitive Singer Focus',
-            'camera|shot|shots|angle|view|editing': 'Distracting Camera Work',
-            'audience|crowd|reaction|reactions|cutaway|people': 'Excessive Audience Reactions',
-            'sob|cry|crying|sad|pity|tear': 'Forced Melodrama & Tears',
-            'story|backstory|background|life|melodrama': 'Backstory-Over-Talent Editing',
-            'singing competition|voice|idol|vocals|sing': 'Degeneration into Singing Show',
-            'staged|fake|scripted|rigged|set up|fixed': 'Fabricated Stage Directions',
-            'commercial|commercials|ad|ads|break|breaks|interrupt': 'Frequent Commercial Breaks',
-            'annoying|frustrated|irritating|irritated|mad|angry': 'Frustrating Presentation',
-            'lame|boring|cliche|stupid|corny|predictable': 'Cliche & Predictable Formats'
-        }
-    },
-    'Hell\'s Kitchen': {
-        'positive': {
-            'talent|skill|competent|pro|experienced': 'Outstanding Contestant Skills',
-            'gordon|ramsay|host|expert': 'Gordon Ramsay\'s Presence',
-            'feedback|critic|teaching|mentor|advice|say|comment|judge|judging|critique|evaluate|opinion': 'Sharp & Constructive Feedback',
-            'chef|cook|professional': 'Professional Chef Showdowns',
-            'service|dinner|rush|pressure': 'Dinner Service Pressure',
-            'risotto|dish|food|scallop|meat|cooking': 'Signature Menus & Dishes',
-            'kitchen|station|line|team': 'Dynamic Kitchen Environment',
-            'growth|improve|learn|better|progress': 'Contestant Skill Growth',
-            'professional|expert|quality|standards': 'High Professional Standards',
-            'jacket|black jacket|finale|win': 'Symbolism of the Black Jacket'
-        },
-        'negative': {
-            'clueless|amateur|unskilled|bad|terrible|worst|stupid|idiot': 'Incompetent & Unskilled Cast',
-            'drama|fight|argument|conflict|clash|toxic': 'Forced Drama & Conflicts',
-            'psycho|crazy|insane|nuts|mad': 'Erratic Participant Behavior',
-            '': ' ', # Omitted factor (blank)
-            'fail|mistake|error|screw|scallop|risotto': 'Repeated Culinary Failures',
-            'shout|yell|scream|curse|swear|profane|yelling': 'Excessive Screaming & Fatigue',
-            'annoying|frustrated|irritating|irritated|mad|angry': 'Annoying Interpersonal Friction',
-            'fake|staged|scripted|unreal': 'Artificial Reality TV Production',
-            ' ': '  ', # Omitted factor (blank)
-            'argument|bicker|gossip|backstab|whine': 'Trivial Arguments & Bickering'
-        }
-    }
-}
-
-program_dfs = [df_survivor, df_agt, df_hk]
-program_names = ['Survivor', 'AGT', 'Hell\'s Kitchen']
-
-for df, name in zip(program_dfs, program_names):
-
-    pos_reviews = df[df['sentiment_clean'] == 'positive']
-    neg_reviews = df[df['sentiment_clean'] == 'negative']
-
-    total_pos = len(pos_reviews)
-    total_neg = len(neg_reviews)
-
-    # Calculate Positive Factors
-    pos_results = {}
-    pos_counts = {}
-    for eng_kw, label_en in keywords_dict[name]['positive'].items():
-        count = pos_reviews['review_text'].str.contains(eng_kw, case=False, na=False).sum()
-        pos_counts[label_en] = count
-        pos_results[label_en] = (count / total_pos * 100) if total_pos > 0 else 0
-
-    # Calculate Negative Factors
-    neg_results = {}
-    neg_counts = {}
-    for eng_kw, label_en in keywords_dict[name]['negative'].items():
-        if eng_kw.strip() == '':
-            count = 0
-        else:
-            count = neg_reviews['review_text'].str.contains(eng_kw, case=False, na=False).sum()
-        neg_counts[label_en] = count
-        neg_results[label_en] = (count / total_neg * 100) if total_neg > 0 else 0
-
-    # Structuring and Sorting DataFrames
-    df_pos_kw = pd.DataFrame(list(pos_results.items()), columns=['Factor', 'Percentage'])
-    df_pos_kw['Count'] = df_pos_kw['Factor'].map(pos_counts)
-    df_pos_kw = df_pos_kw.sort_values(by='Percentage', ascending=True)
-
-    df_neg_kw = pd.DataFrame(list(neg_results.items()), columns=['Factor', 'Percentage'])
-    df_neg_kw['Count'] = df_neg_kw['Factor'].map(neg_counts)
-    df_neg_kw = df_neg_kw.sort_values(by='Percentage', ascending=True)
+# ... [Middle part of the code has been truncated for display purposes] ...
+# Handles data manipulation, keyword mapping against sentiments, and generating pie charts
 
     # Draw Horizontal Bar Charts
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 5))
@@ -1254,7 +788,7 @@ for df, name in zip(program_dfs, program_names):
     ax2.set_xlabel('Appearance Rate in Negative Reviews (%)', fontsize=11)
     ax2.set_xlim(0, df_neg_kw['Percentage'].max() + 22)
 
-    # Add Data Labels (Skip for blank items)
+    # Add Data Labels dynamically
     for bar, count, label in zip(bars1, df_pos_kw['Count'], df_pos_kw['Factor']):
         if label.strip() != '':
             width = bar.get_width()
@@ -1271,9 +805,9 @@ for df, name in zip(program_dfs, program_names):
     plt.show()</code></pre>
                 </div>
             </div>
-
         </section>
 
+        <!-- SECTION 4: FINDINGS -->
         <section id="findings">
             <h2>4. Findings (Data Visualization)</h2>
             
@@ -1288,36 +822,38 @@ for df, name in zip(program_dfs, program_names):
                 </ul>
             </div>
 
+            <!-- Pie Charts (수정 완료: Positive/Negative/Neutral 텍스트 추가) -->
             <div class="pie-charts-wrapper">
                 <div class="pie-box">
                     <h4>Survivor Sentiment Ratio</h4>
                     <div class="pie-chart pie-survivor"></div>
                     <div class="pie-legend">
-                        <div class="legend-item"><div class="color-box color-pos"></div> 44.1%</div>
-                        <div class="legend-item"><div class="color-box color-neg"></div> 46.6%</div>
-                        <div class="legend-item"><div class="color-box color-neu"></div> 9.2%</div>
+                        <div class="legend-item"><div class="color-box color-pos"></div> Positive: 44.1%</div>
+                        <div class="legend-item"><div class="color-box color-neg"></div> Negative: 46.6%</div>
+                        <div class="legend-item"><div class="color-box color-neu"></div> Neutral: 9.2%</div>
                     </div>
                 </div>
                 <div class="pie-box">
                     <h4>America's Got Talent Sentiment Ratio</h4>
                     <div class="pie-chart pie-agt"></div>
                     <div class="pie-legend">
-                        <div class="legend-item"><div class="color-box color-pos"></div> 51.7%</div>
-                        <div class="legend-item"><div class="color-box color-neg"></div> 24.6%</div>
-                        <div class="legend-item"><div class="color-box color-neu"></div> 23.7%</div>
+                        <div class="legend-item"><div class="color-box color-pos"></div> Positive: 51.7%</div>
+                        <div class="legend-item"><div class="color-box color-neg"></div> Negative: 24.6%</div>
+                        <div class="legend-item"><div class="color-box color-neu"></div> Neutral: 23.7%</div>
                     </div>
                 </div>
                 <div class="pie-box">
                     <h4>Hell's Kitchen Sentiment Ratio</h4>
                     <div class="pie-chart pie-hk"></div>
                     <div class="pie-legend">
-                        <div class="legend-item"><div class="color-box color-pos"></div> 54.7%</div>
-                        <div class="legend-item"><div class="color-box color-neg"></div> 26.6%</div>
-                        <div class="legend-item"><div class="color-box color-neu"></div> 18.8%</div>
+                        <div class="legend-item"><div class="color-box color-pos"></div> Positive: 54.7%</div>
+                        <div class="legend-item"><div class="color-box color-neg"></div> Negative: 26.6%</div>
+                        <div class="legend-item"><div class="color-box color-neu"></div> Neutral: 18.8%</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Program 1: Survivor -->
             <div class="program-section">
                 <div class="top10-container">
                     <div class="top10-column">
@@ -1350,6 +886,7 @@ for df, name in zip(program_dfs, program_names):
                 </div>
             </div>
 
+            <!-- Program 2: Hell's Kitchen -->
             <div class="program-section">
                 <div class="top10-container">
                     <div class="top10-column">
@@ -1380,6 +917,7 @@ for df, name in zip(program_dfs, program_names):
                 </div>
             </div>
 
+            <!-- Program 3: AGT -->
             <div class="program-section">
                 <div class="top10-container">
                     <div class="top10-column">
@@ -1411,9 +949,9 @@ for df, name in zip(program_dfs, program_names):
                     </div>
                 </div>
             </div>
-
         </section>
 
+        <!-- SECTION 5: PROPOSALS -->
         <section id="proposals">
             <h2>5. Content Proposals (Integrated Ecosystem)</h2>
             <p>Rather than merely listing these insights, we propose <strong>'The Professional'</strong> as an integrated survival ecosystem. By combining the proven success elements while structurally eliminating the failure points, we create a program where dramatic tension arises naturally from the participants rather than artificial direction.</p>
@@ -1438,6 +976,7 @@ for df, name in zip(program_dfs, program_names):
             </div>
         </section>
 
+        <!-- SECTION 6: CONCLUSION -->
         <section id="conclusion">
             <h2>6. Conclusion</h2>
             <div class="highlight-box">
@@ -1452,6 +991,7 @@ for df, name in zip(program_dfs, program_names):
             <p>It is necessary to collect additional data from YouTube trending features and social media platforms to dynamically reflect real-time public reactions. Furthermore, a comparative analysis with popular domestic programs like 'Culinary Class Wars' could help derive localized strategies tailored to different cultural contexts. Ultimately, introducing episode-level time-series sentiment analysis to track text characteristics at specific viewership fluctuation points will provide more concrete, data-driven production guidelines.</p>
         </section>
 
+        <!-- SECTION 7: REFERENCES -->
         <section id="references">
             <h2>7. References</h2>
             <div class="references-list">
@@ -1483,6 +1023,7 @@ for df, name in zip(program_dfs, program_names):
         <p>&copy; 2026 'The Professional' Project Team. Created for StreamKUS Content Planning.</p>
     </footer>
 
+    <!-- JSON DATA & Dynamic Rendering Script -->
     <script>
         var agtData = [{"season": 5, "total": 1, "avg_rating": 10.0, "pos": 1, "neg": 0, "neu": 0, "top_pos": "Talent", "top_neg": "N/A"}, {"season": 9, "total": 1, "avg_rating": 10.0, "pos": 1, "neg": 0, "neu": 0, "top_pos": "Finalists", "top_neg": "N/A"}, {"season": 11, "total": 1, "avg_rating": 10.0, "pos": 1, "neg": 0, "neu": 0, "top_pos": "Skill", "top_neg": "N/A"}, {"season": 12, "total": 15, "avg_rating": 7.2, "pos": 15, "neg": 0, "neu": 0, "top_pos": "Great", "top_neg": "N/A"}, {"season": 13, "total": 27, "avg_rating": 5.7, "pos": 14, "neg": 8, "neu": 5, "top_pos": "Amazing", "top_neg": "Annoying"}, {"season": 14, "total": 23, "avg_rating": 5.7, "pos": 12, "neg": 5, "neu": 6, "top_pos": "Performance", "top_neg": "Commercials"}, {"season": 15, "total": 10, "avg_rating": 4.8, "pos": 4, "neg": 4, "neu": 2, "top_pos": "Good", "top_neg": "Singers"}, {"season": 16, "total": 4, "avg_rating": 5.8, "pos": 2, "neg": 1, "neu": 1, "top_pos": "Act", "top_neg": "Scripted"}, {"season": 17, "total": 25, "avg_rating": 6.1, "pos": 11, "neg": 6, "neu": 8, "top_pos": "Acts", "top_neg": "Boring"}, {"season": 18, "total": 3, "avg_rating": 4.0, "pos": 0, "neg": 2, "neu": 1, "top_pos": "N/A", "top_neg": "Audience"}, {"season": 19, "total": 1, "avg_rating": 6.0, "pos": 0, "neg": 0, "neu": 1, "top_pos": "N/A", "top_neg": "N/A"}, {"season": 20, "total": 7, "avg_rating": 3.6, "pos": 0, "neg": 3, "neu": 4, "top_pos": "N/A", "top_neg": "Talent"}];
         var hkData = [{"season": 1, "total": 5, "avg_rating": 6.4, "pos": 4, "neg": 1, "neu": 0, "top_pos": "Kitchen", "top_neg": "Gross"}, {"season": 2, "total": 7, "avg_rating": 7.6, "pos": 4, "neg": 0, "neu": 3, "top_pos": "Gordon", "top_neg": "N/A"}, {"season": 3, "total": 3, "avg_rating": 7.0, "pos": 2, "neg": 0, "neu": 1, "top_pos": "Chef", "top_neg": "N/A"}, {"season": 5, "total": 2, "avg_rating": 6.5, "pos": 1, "neg": 0, "neu": 1, "top_pos": "Won", "top_neg": "N/A"}, {"season": 7, "total": 2, "avg_rating": 5.5, "pos": 1, "neg": 1, "neu": 0, "top_pos": "Benjamin", "top_neg": "Cannot"}, {"season": 8, "total": 1, "avg_rating": 7.0, "pos": 1, "neg": 0, "neu": 0, "top_pos": "Russell", "top_neg": "N/A"}, {"season": 9, "total": 7, "avg_rating": 6.6, "pos": 5, "neg": 1, "neu": 1, "top_pos": "Cooking", "top_neg": "Mistakes"}, {"season": 10, "total": 4, "avg_rating": 5.0, "pos": 1, "neg": 2, "neu": 1, "top_pos": "Kitchen", "top_neg": "Premiere"}, {"season": 11, "total": 1, "avg_rating": 8.0, "pos": 1, "neg": 0, "neu": 0, "top_pos": "Challenge", "top_neg": "N/A"}, {"season": 15, "total": 2, "avg_rating": 5.5, "pos": 1, "neg": 1, "neu": 0, "top_pos": "Service", "top_neg": "Jared"}, {"season": 17, "total": 8, "avg_rating": 4.5, "pos": 3, "neg": 4, "neu": 1, "top_pos": "Person", "top_neg": "Drama"}, {"season": 18, "total": 4, "avg_rating": 4.5, "pos": 2, "neg": 2, "neu": 0, "top_pos": "Team", "top_neg": "Screaming"}, {"season": 19, "total": 6, "avg_rating": 7.8, "pos": 4, "neg": 0, "neu": 2, "top_pos": "Skills", "top_neg": "N/A"}, {"season": 20, "total": 7, "avg_rating": 4.3, "pos": 2, "neg": 4, "neu": 1, "top_pos": "Better", "top_neg": "Got"}, {"season": 22, "total": 3, "avg_rating": 6.0, "pos": 2, "neg": 1, "neu": 0, "top_pos": "Being", "top_neg": "Fake"}, {"season": 24, "total": 2, "avg_rating": 7.0, "pos": 1, "neg": 0, "neu": 1, "top_pos": "Three", "top_neg": "N/A"}];
